@@ -34,31 +34,32 @@ async def get_all_chats():
         offset_date=None,
         offset_id=0,
         offset_peer=InputPeerEmpty(),
-        limit=100,
+        limit=10,
         hash=0
     ))
+    print(result)
     
-    chats = result.chats
+    # chats = result.chats
     
-    print(f"\n총 {len(chats)}개의 채팅방이 있습니다.")
+    # print(f"\n총 {len(chats)}개의 채팅방이 있습니다.")
     
     # 각 채팅방 정보 출력
-    for i, chat in enumerate(chats):
-        try:
-            print(f"\n{i+1}. {chat.title}")
+    # for i, chat in enumerate(chats):
+    #     try:
+    #         print(f"\n{i+1}. {chat.title}")
             
-            # 각 채팅방의 최근 메시지 가져오기
-            messages = await client.get_messages(chat, limit=10)
+    #         # 각 채팅방의 최근 메시지 가져오기
+    #         messages = await client.get_messages(chat, limit=2)
             
-            print(f"-- 최근 메시지 {len(messages)}개 --")
-            for msg in messages:
-                sender = await msg.get_sender()
-                sender_name = f"{sender.first_name} {sender.last_name if sender.last_name else ''}" if sender else "알 수 없음"
-                content = msg.message if msg.message else "[미디어/특수 메시지]"
-                print(f"[{msg.date}] {sender_name}: {content}")
+            # print(f"-- 최근 메시지 {len(messages)}개 --")
+            # for msg in messages:
+            #     sender = await msg.get_sender()
+            #     sender_name = f"{sender.first_name} {sender.last_name if sender.last_name else ''}" if sender else "알 수 없음"
+            #     content = msg.message if msg.message else "[미디어/특수 메시지]"
+            #     print(f"[{msg.date}] {sender_name}: {content}")
             
-        except Exception as e:
-            print(f"채팅방 정보를 가져오는 중 오류 발생: {e}")
+        # except Exception as e:
+        #     print(f"채팅방 정보를 가져오는 중 오류 발생: {e}")
     
     await client.disconnect()
 
