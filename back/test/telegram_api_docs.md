@@ -1,5 +1,4 @@
-
-#텔레그램
+# 텔레그램
 
 ## 텔레그램메 api 연결
 - [텔레그램 org](https://my.telegram.org/auth) 접속
