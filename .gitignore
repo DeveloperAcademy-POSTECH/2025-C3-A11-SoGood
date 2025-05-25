@@ -4,6 +4,7 @@
 
 ## Basic
 .env
+__pycache__/
 
 ## User settings
 xcuserdata/
