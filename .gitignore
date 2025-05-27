@@ -66,5 +66,4 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 
 # telegram
-*.session
-/session
+*.session*
