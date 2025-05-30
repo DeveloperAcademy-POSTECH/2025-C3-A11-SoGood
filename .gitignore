@@ -5,6 +5,7 @@
 ## Basic
 .env
 __pycache__/
+firebase-key.json
 
 ## User settings
 xcuserdata/
