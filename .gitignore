@@ -4,6 +4,7 @@
 
 ## Basic
 .env
+.venv
 __pycache__/
 firebase-key.json
 
