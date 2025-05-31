@@ -4,7 +4,7 @@ beautifulsoup4==4.13.4
 cachetools==5.5.2
 certifi==2025.4.26
 charset-normalizer==3.4.2
-click==8.2.0
+click==8.1.7
 dotenv==0.9.9
 fastapi==0.115.12
 google-ai-generativelanguage==0.6.15
@@ -40,3 +40,4 @@ typing_extensions==4.13.2
 uritemplate==4.1.1
 urllib3==2.4.0
 uvicorn==0.34.2
+firebase-admin==6.2.0
