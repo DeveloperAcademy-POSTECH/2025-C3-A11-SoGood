@@ -78,6 +78,19 @@ def gemini_prompt(sector, data):
             "채널이름2": 점수,
             ...
         }},
-        "summary": "모든 채널 내용을 종합한 요약문"
+        "summary": {{
+            "긍정": {{
+                "headline": "헤드라인",
+                "summary": "요약"
+            }},
+            "중립": {{
+                "headline": "헤드라인",
+                "summary": "요약"
+            }},
+            "부정": {{
+                "headline": "헤드라인",
+                "summary": "요약"
+            }}
+        }}
     }}'''
     return sector_discription + defult_prompt + data
