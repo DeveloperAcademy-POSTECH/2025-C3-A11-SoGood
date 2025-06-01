@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C2299BFC2DE8921B009DD5B6 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = C2299BFB2DE8921B009DD5B6 /* FirebaseCore */; };
+		C2D74A6F2DEB3FF10006B8A1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C2D74A6E2DEB3FF10006B8A1 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2299BFC2DE8921B009DD5B6 /* FirebaseCore in Frameworks */,
+				C2D74A6F2DEB3FF10006B8A1 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +81,7 @@
 			name = "Public Opinion for Stock";
 			packageProductDependencies = (
 				C2299BFB2DE8921B009DD5B6 /* FirebaseCore */,
+				C2D74A6E2DEB3FF10006B8A1 /* FirebaseFirestore */,
 			);
 			productName = "Public Opinion for Stock";
 			productReference = C2299BDA2DE823A5009DD5B6 /* Public Opinion for Stock.app */;
@@ -366,6 +369,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C2299BF92DE891A3009DD5B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
+		};
+		C2D74A6E2DEB3FF10006B8A1 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2299BF92DE891A3009DD5B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

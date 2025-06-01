@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+import FirebaseFirestore
 import SwiftData
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -19,6 +20,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct Public_Opinion_for_StockApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var viewModel = SentimentViewModel(category: "IT")
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -35,7 +38,7 @@ struct Public_Opinion_for_StockApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-
+                .environmentObject(viewModel)
         }
         .modelContainer(sharedModelContainer)
     }
