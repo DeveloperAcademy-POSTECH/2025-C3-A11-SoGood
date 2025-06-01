@@ -7,7 +7,7 @@
 .venv
 __pycache__/
 firebase-key.json
-.log
+*.log
 
 ## User settings
 xcuserdata/
