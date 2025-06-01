@@ -79,15 +79,15 @@ def gemini_prompt(sector, data):
             ...
         }},
         "summary": {{
-            "긍정": {{
+            "positive": {{
                 "headline": "헤드라인",
                 "summary": "요약"
             }},
-            "중립": {{
+            "neutral": {{
                 "headline": "헤드라인",
                 "summary": "요약"
             }},
-            "부정": {{
+            "negative": {{
                 "headline": "헤드라인",
                 "summary": "요약"
             }}
