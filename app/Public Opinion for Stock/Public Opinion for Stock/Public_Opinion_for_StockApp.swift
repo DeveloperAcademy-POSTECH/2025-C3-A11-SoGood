@@ -34,7 +34,7 @@ struct Public_Opinion_for_StockApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SectorDetailView()
 
         }
         .modelContainer(sharedModelContainer)
