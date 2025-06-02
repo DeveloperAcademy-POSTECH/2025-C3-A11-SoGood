@@ -2,7 +2,7 @@ import json
 import os
 
 # JSON 파일 경로
-input_file = '../data/sector_data.json'
+input_file = '../data/telegram_crawling.json'
 output_file = 'channel_posts.json'
 
 # 현재 스크립트의 디렉토리 경로
