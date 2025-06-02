@@ -1,7 +1,4 @@
 
-
-
-
 ## Firebase 저장 구조
 - "sector_score"(collection)
     - "datas"(docs)
@@ -9,20 +6,37 @@
 
 - "sector_detail"(collection)
     - 각 섹터 이름 |ex."전선"| (docs)
-        - { "sector": "전선" } -> docs 이름 확인 하기 위한 형식상 데이터
+        - { "sector": "전선" } (field) -> docs 이름 확인 하기 위한 형식상 데이터
 
         - "monthly_data"(collection)
             - 각 연도와 달 |ex."25-05"| (docs)
-                - {"25-05-":
+                - {"25-05-01":
                     {
                         positive: 00,
                         neutral: 00,
                         negative: 00
                     },
-                    
+                    "25-05-02":
+                    {
+                        positive: 00,
+                        neutral: 00,
+                        negative: 00
+                    },
+                    "25-05-03":
+                    {
+                        positive: 00,
+                        neutral: 00,
+                        negative: 00
+                    },
+                    ....
                 }
 
         - "quarters_data"(collection)
+            - 각 연도별 분기 |ex."25-1"|  (docs)
+                - {
+                    "25-01":
+
+                }
 
     
         - "dates"(collection)
@@ -41,6 +55,11 @@
                             "headline": "헤드라인",
                             "summary": "요약"
                         }
+                    },
+                    counts: {
+                        positive: 00,
+                        neutral: 00,
+                        negative: 00
                     }
                 }
 
