@@ -8,8 +8,13 @@
 import SwiftUI
 import Charts
 
+
+
 struct SectorDetailView: View {
-    @StateObject private var viewModel = PublicOpinionsViewModel()
+    @StateObject private var viewModel = SectorViewModel()
+    @State private var selectedTab = 0
+    @State private var isExpanded: Bool = false
+
     
     private var sentimentOrder = ["긍정", "중립", "부정"]
     private var sentimentColors: [String: Color] = [
@@ -18,29 +23,31 @@ struct SectorDetailView: View {
         "부정": .blue
     ]
     
+    let headline: String = "Headline"
+    let summary: String = "Summary"
+    
     var body: some View {
         
-        ScrollView {
+        ScrollView() {
             
             VStack(alignment: .leading) {
                 
-                // MARK: -- 탭바
+                // MARK: - 탭바
+                // FIXME: 버튼으로 변경?
                 HStack(spacing: 24) {
                     Spacer()
                     
                     // FIXME: 데이터 수정
-                    Text("배터리")
+                    
+                    Text(viewModel.sectors.keys.sorted().joined(separator: ", "))
                         .font(.headline)
-                        .foregroundStyle(.gray)
-                    Text("IT")
-                        .font(.headline)
-                    Text("조선기자재")
-                        .font(.headline)
-                        .foregroundStyle(.gray)
+//                    Text("조선기자재")
+//                        .font(.headline)
+//                        .foregroundStyle(.gray)
                     Spacer()
                 }.padding()
                 
-                // MARK: -- 오늘 대중의 이야기 섹터
+                // MARK: - 오늘 대중의 이야기 섹터
                 HStack {
                     Text("오늘 대중의 이야기")
                         .font(.title)
@@ -48,7 +55,7 @@ struct SectorDetailView: View {
                     
                     // FIXME: 버튼 후 안내창 수정
                     Button {
-                        print("버튼 눌렀어엽")
+                        print("AI 요약 버튼 눌렀어엽")
                     } label: {
                         HStack {
                             Text("AI요약")
@@ -65,12 +72,12 @@ struct SectorDetailView: View {
                     
                 }.padding(.bottom, 4)
                 
-                Text("\(viewModel.groupedBySectorAndDate.keys.sorted().first ?? "섹터 없음") 종목에 대한 사람들의 반응을 모아봤어요.")
+                Text("\(viewModel.sectors.keys.sorted().first ?? "섹터 없음") 종목에 대한 사람들의 반응을 모아봤어요.")
                     .font(.subheadline)
                     .padding(.bottom)
                 
                 
-                // MARK: -- 그래프 섹터
+                // MARK: - 그래프 섹터
                 // 감정 비율을 상단에 표시
                 HStack {
                     // 긍정 퍼센트
@@ -134,6 +141,48 @@ struct SectorDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 
+                // MARK: 대중들의 반응 요약본
+                Button {
+                    withAnimation(.spring(response: 0.3)) {
+                        isExpanded.toggle()
+                    }
+                } label: {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("긍정적 반응")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.red)
+                            
+                            Spacer()
+                            
+                            Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                                .foregroundStyle(.gray)
+                                .font(.system(size: 14))
+                        }
+                        .padding(.bottom, 8)
+                        
+                        Text(headline)
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.black)
+                    }
+                    .padding(.vertical)
+                }
+                
+                if isExpanded {
+                    VStack(alignment: .leading) {
+                        Text(headline)
+                            .font(.headline)
+                            .fontWeight(.black)
+                        
+                        Text(summary)
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                
           
                 
                 
@@ -143,10 +192,6 @@ struct SectorDetailView: View {
             
             Spacer()
             
-        }
-        .onAppear {
-            viewModel.loadDummyDataGroupedBySectorAndDate()
-            viewModel.calculationSentimentRatios()
         }
     }
     
