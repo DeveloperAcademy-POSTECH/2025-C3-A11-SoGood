@@ -11,11 +11,16 @@ struct ListView: View {
     //샘플 데이터입니당
     let items: [RowItem_test] = [
         RowItem_test(name: "반도체", value: 16),
-        RowItem_test(name: "반도체", value: 16),
-        RowItem_test(name: "반도체", value: 0),
-        RowItem_test(name: "반도체", value: 0),
-        RowItem_test(name: "반도체", value: -16)
+        RowItem_test(name: "게임", value: 5),
+        RowItem_test(name: "건설", value: 14),
+        RowItem_test(name: "방산", value: 0),
+        RowItem_test(name: "이차전지", value: -16)
     ]
+    
+    //내림차순 메서드 코드
+    var sortedItems: [RowItem_test] {
+            items.sorted { $0.value > $1.value }
+        }
     
     var body: some View {
         VStack (alignment: .leading, spacing: 8) {
@@ -36,7 +41,7 @@ struct ListView: View {
         
         //리스트 코드 (RowView를 불러옴)
         List {
-            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+            ForEach(Array(sortedItems.enumerated()), id: \.element.id) { index, item in
                         RowView(index: index, item: item)
                     }
                 }
