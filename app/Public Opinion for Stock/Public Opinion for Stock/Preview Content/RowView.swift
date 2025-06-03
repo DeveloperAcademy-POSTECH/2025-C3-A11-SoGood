@@ -13,11 +13,11 @@ struct RowView: View {
 
     var valueColor: Color {
         if item.value > 0 {
-            return .red
+            return .redPrimary
         } else if item.value < 0 {
-            return .blue
+            return .bluePrimary
         } else {
-            return .gray
+            return .lableSecondary
         }
     }
 
@@ -34,14 +34,17 @@ struct RowView: View {
     var body: some View {
         HStack {
             Text("\(index + 1)")
+                .font(.headline1)
                 .frame(width: 24)
-                .foregroundColor(.blue)
+                .foregroundColor(.lableSecondary)
             Image(systemName: "cpu")
                 .foregroundColor(.blue)
             Text(item.name)
-                .frame(width: 60, alignment: .leading)
+                .font(.headline1)
+                .frame(width: 120, alignment: .leading)
             Spacer()
             Text(valueText)
+                .font(.headline2)
                 .foregroundColor(valueColor)
         }
         .padding(.vertical, 8)
