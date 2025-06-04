@@ -1,20 +1,12 @@
-//
-//  SectorDetailView.swift
-//  Public Opinion for Stock
-//
-//  Created by 우정아 on 6/2/25.
-//
-
 import SwiftUI
 import Charts
-
 
 
 struct SectorDetailView: View {
     @StateObject private var viewModel = SectorViewModel()
     @State private var selectedTab = 0
     @State private var isExpanded: Bool = false
-
+    
     
     private var sentimentOrder = ["긍정", "중립", "부정"]
     private var sentimentColors: [String: Color] = [
@@ -41,9 +33,9 @@ struct SectorDetailView: View {
                     
                     Text(viewModel.sectors.keys.sorted().joined(separator: ", "))
                         .font(.headline)
-//                    Text("조선기자재")
-//                        .font(.headline)
-//                        .foregroundStyle(.gray)
+                    //                    Text("조선기자재")
+                    //                        .font(.headline)
+                    //                        .foregroundStyle(.gray)
                     Spacer()
                 }.padding()
                 
@@ -74,7 +66,7 @@ struct SectorDetailView: View {
                 
                 Text("\(viewModel.sectors.keys.sorted().first ?? "섹터 없음") 종목에 대한 사람들의 반응을 모아봤어요.")
                     .font(.subheadline)
-                    .padding(.bottom)
+                    .padding(.bottom, 37)
                 
                 
                 // MARK: - 그래프 섹터
@@ -140,51 +132,10 @@ struct SectorDetailView: View {
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
+                .padding(.bottom, 37)
                 
                 // MARK: 대중들의 반응 요약본
-                Button {
-                    withAnimation(.spring(response: 0.3)) {
-                        isExpanded.toggle()
-                    }
-                } label: {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("긍정적 반응")
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.red)
-                            
-                            Spacer()
-                            
-                            Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                                .foregroundStyle(.gray)
-                                .font(.system(size: 14))
-                        }
-                        .padding(.bottom, 8)
-                        
-                        Text(headline)
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.black)
-                    }
-                    .padding(.vertical)
-                }
-                
-                if isExpanded {
-                    VStack(alignment: .leading) {
-                        Text(headline)
-                            .font(.headline)
-                            .fontWeight(.black)
-                        
-                        Text(summary)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                
-          
-                
+                HeadlineAndSummaryView(sentimentHeadline: "긍정적 반응", sentimentColor: .red, headline: "wowww", summary: "wwwwdddd")
                 
                 
             }
@@ -208,6 +159,52 @@ struct SectorDetailView: View {
         }
     }
 }
+
+
+struct HeadlineAndSummaryView: View {
+    @State private var isExpanded: Bool = false
+    
+    let sentimentHeadline: String
+    let sentimentColor: Color
+    let headline: String
+    let summary: String
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            
+            VStack {
+                HStack {
+                    Text(sentimentHeadline)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundStyle(sentimentColor)
+                    
+                    Spacer()
+                    
+                    Button {
+                        isExpanded.toggle()
+                    } label: {
+                        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                            .foregroundStyle(.gray)
+                    }
+                    
+                }
+                
+                Text(headline)
+                
+                if isExpanded {
+                    Text(summary)
+                        .font(.body)
+                        .fontWeight(.medium)
+                }
+            }
+
+
+        }
+    }
+}
+
+
 
 #Preview {
     SectorDetailView()
