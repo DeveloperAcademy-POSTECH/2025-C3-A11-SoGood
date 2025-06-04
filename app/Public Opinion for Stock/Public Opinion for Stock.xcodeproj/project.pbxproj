@@ -15,22 +15,9 @@
 		C2299BDA2DE823A5009DD5B6 /* Public Opinion for Stock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Public Opinion for Stock.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		16E4EEF72DED926300420E19 /* Exceptions for "Public Opinion for Stock" folder in "Public Opinion for Stock" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Public-Opinion-for-Stock-Info.plist",
-			);
-			target = C2299BD92DE823A5009DD5B6 /* Public Opinion for Stock */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C2299BDC2DE823A5009DD5B6 /* Public Opinion for Stock */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				16E4EEF72DED926300420E19 /* Exceptions for "Public Opinion for Stock" folder in "Public Opinion for Stock" target */,
-			);
 			path = "Public Opinion for Stock";
 			sourceTree = "<group>";
 		};
