@@ -45,10 +45,9 @@ class SectorViewModel: ObservableObject {
                         
                         self.firestoreService.fetchDateInfo(for: sector, date: date) { dateInfo in
                             if let dateInfo = dateInfo {
-                                DispatchQueue.main.async {
-                                    dateInfoDict[date] = dateInfo
-
-                                }
+                                dateInfoDict[date] = dateInfo
+                                
+                                
                             }
                             dateGroup.leave()
                         }
@@ -68,10 +67,15 @@ class SectorViewModel: ObservableObject {
                 }
             }
             
-            group.notify(queue: .main) {
+            group.notify(queue: .main) { [weak self] in
+                guard let self = self else { return }
                 self.sectors = sectorDataDict
                 self.selectedSector = sectors.first
-                self.calculateSentimentRatios()
+                
+                
+                DispatchQueue.main.async {
+                    self.calculateSentimentRatios()
+                }
                 self.isLoading = false
             }
         }
@@ -96,13 +100,16 @@ class SectorViewModel: ObservableObject {
         // 감정 카운트 합산
         for (_, sectorData) in sectorsToCalculate {
             for (_, dateInfo) in sectorData.dates {
-                sentimentCount["긍정"]! += dateInfo.counts.positive
-                sentimentCount["중립"]! += dateInfo.counts.natural
-                sentimentCount["부정"]! += dateInfo.counts.negative
+                let pos = dateInfo.counts.positive
+                let neu = dateInfo.counts.nutural
+                let neg = dateInfo.counts.negative
+      
+                sentimentCount["긍정"]! += pos
+                sentimentCount["중립"]! += neu
+                sentimentCount["부정"]! += neg
                 
-                totalCount += dateInfo.counts.positive +
-                            dateInfo.counts.natural +
-                            dateInfo.counts.negative
+                totalCount += pos + neu + neg
+
             }
         }
         

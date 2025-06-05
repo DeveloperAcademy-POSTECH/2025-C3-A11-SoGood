@@ -97,7 +97,7 @@ struct SentimentBarChart: View {
                     }, id: \.key) { sentiment, ratio in
                         BarMark(
                             x: .value("비율", ratio),
-                            y: .value("감정", " "),
+                            y: .value("감정", ""),
                             height: MarkDimension(floatLiteral: 10)
                         )
                         .foregroundStyle(sentimentColors[sentiment] ?? .grayNeutural)
