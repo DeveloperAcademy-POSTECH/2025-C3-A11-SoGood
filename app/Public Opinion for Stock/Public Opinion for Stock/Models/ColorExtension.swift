@@ -1,4 +1,8 @@
+//Hex code 쓰기
+// Color(hex: "#00000")
+
 import SwiftUI
+
 
 extension Color {
     init(hex: String) {
