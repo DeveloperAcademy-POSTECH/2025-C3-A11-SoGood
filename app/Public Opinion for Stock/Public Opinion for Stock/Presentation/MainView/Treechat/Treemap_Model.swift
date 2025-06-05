@@ -22,18 +22,18 @@ enum SentimentType {
         switch self {
         case .positive:
             return ColorTheme(
-                background: Color(red: 1, green: 0.28, blue: 0.25).opacity(0.70),
-                text: Color(red: 1, green: 0, blue: 0)
+                background: Color(hex: "#FFC1BF"),
+                text: Color(hex: "#FF0000")
             )
         case .negative:
             return ColorTheme(
-                background: Color(red: 0.47, green: 0.52, blue: 0.99),
-                text: Color(red: 0.10, green: 0, blue: 1)
+                background: Color(hex: "#BFCAFF"),
+                text: Color(hex: "#1900FF")
             )
         case .neutral:
             return ColorTheme(
-                background: Color(red: 0.81, green: 0.81, blue: 0.81),
-                text: Color(red: 0.33, green: 0.33, blue: 0.33)
+                background: Color(hex: "#FFC1BF"),
+                text: Color(hex: "#555555")
             )
         }
     }

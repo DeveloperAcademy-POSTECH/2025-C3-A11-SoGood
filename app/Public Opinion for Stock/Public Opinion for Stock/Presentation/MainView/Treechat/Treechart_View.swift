@@ -6,11 +6,13 @@ struct BlockView: View {
     var body: some View {
         VStack(spacing: 3) {
             Text(block.label)
-                .font(.custom("SF Pro", size: 15).weight(.bold))
-                .foregroundColor(.white)
+                .font(.headline1)
+                .aspectRatio(contentMode: .fit)
+                .foregroundColor(.primary)
             
             Text(block.percent)
-                .font(.custom("SF Pro", size: 12))
+                .font(.body2)
+                .aspectRatio(contentMode: .fit)
                 .foregroundColor(block.sentiment.percentColor)
         }
         .frame(width: block.rect.width, height: 80)
