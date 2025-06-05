@@ -56,7 +56,7 @@ class SectorViewModel: ObservableObject {
                     
                     // dateGroup이 완료된 후에 SectorData를 생성하고 group.leave() 호출
                     dateGroup.notify(queue: .main) { [weak self] in
-                        guard let self = self else { return }
+                        guard self != nil else { return }
                         
                         // SectorData 생성 - 일반 이니셜라이저 사용
                         let sectorData = SectorData(id: sector, dates: dateInfoDict)
