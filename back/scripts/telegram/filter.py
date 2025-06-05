@@ -20,6 +20,10 @@ def filter_channel(client):
                 channels.append(entity.id)
     return channels
 
+# 해당 채널이 제거할 
+def check_channel(channel):
+    return "" if channel in avoid_channels else channel
+
 ## 메시지에서 찾은 섹터 반환
 def find_sector(messages):
     found_sectors = []
