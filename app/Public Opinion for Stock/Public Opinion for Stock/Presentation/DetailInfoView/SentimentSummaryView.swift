@@ -6,17 +6,44 @@ struct SentimentSummaryView: View {
     
     var body: some View {
         
-        VStack(spacing: 8) {
+        // FIXME: 네비게이션 뷰 수정 (최상단에서 NavigationStack 쌓아야할 듯)
+        NavigationView {
+            VStack(spacing: 8) {
+                
+                SentimentItemView(viewModel: viewModel, sentimentType: "긍정")
+                
+                SentimentItemView(viewModel: viewModel, sentimentType: "부정")
+                
+                SentimentItemView(viewModel: viewModel, sentimentType: "중립")
+                
+                Divider()
+                    .padding()
+                
+                // FIXME: 네비게이션 연결 및 넘어가는 데이터 설정
+                NavigationLink(destination: Text("detailDetailView")) {
+                    HStack {
+                        Text("316개의 의견보기")
+                            .font(.subheadline1)
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 16))
+                            .fontWeight(.medium)
+                    }
+                    .foregroundStyle(.lableSecondary)
+                    
+                    
+                }
+                .padding(.bottom)
+                
+                Spacer()
+            }
             
-            SentimentItemView(viewModel: viewModel, sentimentType: "긍정")
             
-            SentimentItemView(viewModel: viewModel, sentimentType: "부정")
-            
-            SentimentItemView(viewModel: viewModel, sentimentType: "중립")
         }
-        .padding()
+        
     }
 }
+
 
 
 struct SentimentItemView: View {
@@ -97,7 +124,7 @@ struct SentimentItemView: View {
                     .font(isExpanded ? .body3 : .body2)
                     .foregroundStyle(.lablePrimary)
                 
-            
+                
                 if isExpanded {
                     Text(summary.summary)
                         .font(.body1)
@@ -109,7 +136,7 @@ struct SentimentItemView: View {
         }
         .padding()
     }
-        
+    
 }
 
 #Preview {
