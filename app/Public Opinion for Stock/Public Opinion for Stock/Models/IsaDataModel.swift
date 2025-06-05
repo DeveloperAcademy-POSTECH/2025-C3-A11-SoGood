@@ -20,6 +20,11 @@ struct SectorData: Codable, Identifiable {
         }
     }
     
+    init(id: String, dates: [String: DateInfo]) {
+        self.id = id
+        self.dates = dates
+    }
+    
     enum CodingKeys: String, CodingKey {
         case dates
     }
@@ -41,6 +46,11 @@ struct DateInfo: Codable, Identifiable {
         } else {
             self.id = UUID().uuidString
         }
+    }
+    init(id: String, counts: Counts, summary: Summary) {
+        self.id = id
+        self.counts = counts
+        self.summary = summary
     }
     
     enum CodingKeys: String, CodingKey {

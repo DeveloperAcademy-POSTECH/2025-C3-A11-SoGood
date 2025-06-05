@@ -1,40 +1,79 @@
 import Foundation
-
+import FirebaseFirestore
 
 class SectorViewModel: ObservableObject {
     @Published var sectors: [String: SectorData] = [:]
     @Published var selectedSector: String? = nil
     @Published var sentimentRatios: [String: Double] = [:]
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String? = nil
+    
+    private let db = Firestore.firestore()
+    private let firestoreService = FirestoreService()
     
     init() {
         loadSectorData()
     }
     
     func loadSectorData() {
-        guard let url = Bundle.main.url(forResource: "sector_summary_mock_data", withExtension: "json") else {
-            print("❌ JSON 파일을 찾을 수 없습니다.")
-            return
-        }
+        isLoading = true
+        errorMessage = nil
         
-        do {
-            let data = try Data(contentsOf: url)
-            print("📄 데이터 로드 완료: \(data.count) bytes")
+        firestoreService.fetchAllSectors { [weak self] sectors in
+            guard let self = self else { return }
             
-            let decoder = JSONDecoder()
-            let decoded = try decoder.decode(SectorCollection.self, from: data)
-            print("✅ 디코딩 성공")
-            print("📊 섹터 수: \(decoded.count)")
-            print("📊 섹터 목록: \(decoded.keys.joined(separator: ", "))")
+            if sectors.isEmpty {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = "섹터 데이터를 찾을 수 없습니다."
+                }
+                return
+            }
             
-            self.sectors = decoded
+            var sectorDataDict: [String: SectorData] = [:]
+            let group = DispatchGroup()
             
-            self.selectedSector = decoded.keys.sorted().first
+            for sector in sectors {
+                group.enter()
+                
+                self.firestoreService.fetchDates(for: sector) { dates in
+                    var dateInfoDict: [String: DateInfo] = [:]
+                    let dateGroup = DispatchGroup()
+                    
+                    for date in dates {
+                        dateGroup.enter()
+                        
+                        self.firestoreService.fetchDateInfo(for: sector, date: date) { dateInfo in
+                            if let dateInfo = dateInfo {
+                                DispatchQueue.main.async {
+                                    dateInfoDict[date] = dateInfo
+
+                                }
+                            }
+                            dateGroup.leave()
+                        }
+                    }
+                    
+                    // dateGroup이 완료된 후에 SectorData를 생성하고 group.leave() 호출
+                    dateGroup.notify(queue: .main) { [weak self] in
+                        guard let self = self else { return }
+                        
+                        // SectorData 생성 - 일반 이니셜라이저 사용
+                        let sectorData = SectorData(id: sector, dates: dateInfoDict)
+                        sectorDataDict[sector] = sectorData
+                        
+                        // 모든 날짜 데이터가 처리된 후에 group.leave() 호출
+                        group.leave()
+                    }
+                }
+            }
             
-            calculateSentimentRatios()
-            
-        } catch {
-            print("❌ JSON 디코딩 에러: \(error)")
-            print("🔍 상세 에러: \(error.localizedDescription)")
+            group.notify(queue: .main) {
+                self.sectors = sectorDataDict
+                self.selectedSector = sectors.first
+                self.calculateSentimentRatios()
+                self.isLoading = false
+            }
         }
     }
     
@@ -53,7 +92,6 @@ class SectorViewModel: ObservableObject {
         } else {
             sectorsToCalculate = sectors
         }
-        
         
         // 감정 카운트 합산
         for (_, sectorData) in sectorsToCalculate {
@@ -83,10 +121,8 @@ class SectorViewModel: ObservableObject {
         }
     }
     
-    // 섹터 선택
     func selectSector(_ sectorName: String) {
         self.selectedSector = sectorName
         calculateSentimentRatios(forSector: sectorName)
     }
-    
 }
