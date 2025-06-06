@@ -3,7 +3,7 @@ import Charts
 
 
 struct SentimentBarChart: View {
-    @StateObject private var viewModel = SectorViewModel()
+    @StateObject private var viewModel = SectorViewModel(shouldLoad: false)
     @State private var selectedTab = 0
     
     
@@ -14,8 +14,24 @@ struct SentimentBarChart: View {
         "부정": .bluePrimary
     ]
     
-    let headline: String = "Headline"
-    let summary: String = "Summary"
+    let sectorName: String
+    let sectorData: SectorData
+    let allSector: [String]
+    let selectedDate: String
+
+    init(
+        sectorName: String,
+        sectorData: SectorData,
+        allSector: [String],
+        selectedDate: String
+    ) {
+        self.sectorName = sectorName
+        self.sectorData = sectorData
+        self.allSector = allSector
+        self.selectedDate = selectedDate
+    }
+    
+    
     
     var body: some View {
         
@@ -30,7 +46,7 @@ struct SentimentBarChart: View {
                     
                     // FIXME: 데이터 수정
                     
-                    Text(viewModel.sectors.keys.sorted().joined(separator: ", "))
+                    Text(allSector.joined(separator: ", "))
                         .font(.headline2)
                     Spacer()
                 }.padding()
@@ -60,7 +76,7 @@ struct SentimentBarChart: View {
                     
                 }.padding(.bottom, 4)
                 
-                Text("\(viewModel.sectors.keys.sorted().first ?? "섹터 없음") 종목에 대한 사람들의 반응을 모아봤어요.")
+                Text("\(sectorName) 종목에 대한 사람들의 반응을 모아봤어요.")
                     .font(.subheadline1)
                     .foregroundStyle(.lablePrimary)
                     .padding(.bottom, 37)
@@ -131,6 +147,16 @@ struct SentimentBarChart: View {
                 
             }
             .padding(.horizontal, 16)
+            .onAppear {
+                viewModel.injectSectorData(sector: sectorName, data: sectorData)
+                viewModel.calculateSentimentRatios(for: sectorName, date: selectedDate)
+            }
+            
+            SentimentSummaryView(
+                viewModel: viewModel,
+                sectorName: sectorName,
+                selectedDate: selectedDate
+            )
             
             Spacer()
             
@@ -154,5 +180,5 @@ struct SentimentBarChart: View {
 
 
 #Preview {
-    SentimentBarChart()
+//    SentimentBarChart(sectorName: "IT", sectorData: SectorData(id: "dummy", dates: [:]), allSector: ["IT", "바이오", "반도체"], selectedDate: "2025-05-21")
 }

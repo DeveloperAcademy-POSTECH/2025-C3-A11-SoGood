@@ -11,8 +11,10 @@ class SectorViewModel: ObservableObject {
     private let db = Firestore.firestore()
     private let firestoreService = FirestoreService()
     
-    init() {
-        loadSectorData()
+    init(shouldLoad: Bool = true) {
+        if shouldLoad{
+            loadSectorData()
+        }
     }
     
     func loadSectorData() {
@@ -74,62 +76,109 @@ class SectorViewModel: ObservableObject {
                 
                 
                 DispatchQueue.main.async {
-                    self.calculateSentimentRatios()
+                    if let sector = self.selectedSector,
+                       let date = self.sectors[sector]?.dates.keys.sorted().first {
+                        self.calculateSentimentRatios(for: sector, date: date)
+                    } else {
+                        self.sentimentRatios = [:]
+                    }
+                    self.isLoading = false
+                    
                 }
-                self.isLoading = false
             }
         }
     }
+    //
+    //    // 특정 섹터의 감정 비율 계산
+    //    func calculateSentimentRatios(forSector sectorName: String? = nil) {
+    //        var sentimentCount: [String: Int] = ["긍정": 0, "중립": 0, "부정": 0]
+    //        var totalCount = 0
+    //
+    //        let sectorsToCalculate: [String: SectorData]
+    //        if let sectorName = sectorName {
+    //            if let sectorData = sectors[sectorName] {
+    //                sectorsToCalculate = [sectorName: sectorData]
+    //            } else {
+    //                return
+    //            }
+    //        } else {
+    //            sectorsToCalculate = sectors
+    //        }
+    //
+    //        // 감정 카운트 합산
+    //        for (_, sectorData) in sectorsToCalculate {
+    //            for (_, dateInfo) in sectorData.dates {
+    //                let pos = dateInfo.counts.positive
+    //                let neu = dateInfo.counts.nutural
+    //                let neg = dateInfo.counts.negative
+    //
+    //                sentimentCount["긍정"]! += pos
+    //                sentimentCount["중립"]! += neu
+    //                sentimentCount["부정"]! += neg
+    //
+    //                totalCount += pos + neu + neg
+    //
+    //            }
+    //        }
+    //
+    //        guard totalCount > 0 else {
+    //            print("⚠️ 데이터가 없습니다.")
+    //            return
+    //        }
+    //
+    //        self.sentimentRatios = sentimentCount.mapValues { count in
+    //            (Double(count) / Double(totalCount)) * 100.0
+    //        }
+    //
+    //        print("✅ 감정 비율 계산 완료 \(sectorName ?? "전체"):")
+    //        sentimentRatios.forEach { sentiment, ratio in
+    //            print("\(sentiment): \(ratio)%")
+    //        }
+    //    }
     
-    // 특정 섹터의 감정 비율 계산
-    func calculateSentimentRatios(forSector sectorName: String? = nil) {
-        var sentimentCount: [String: Int] = ["긍정": 0, "중립": 0, "부정": 0]
-        var totalCount = 0
-        
-        let sectorsToCalculate: [String: SectorData]
-        if let sectorName = sectorName {
-            if let sectorData = sectors[sectorName] {
-                sectorsToCalculate = [sectorName: sectorData]
-            } else {
-                return
-            }
-        } else {
-            sectorsToCalculate = sectors
-        }
-        
-        // 감정 카운트 합산
-        for (_, sectorData) in sectorsToCalculate {
-            for (_, dateInfo) in sectorData.dates {
-                let pos = dateInfo.counts.positive
-                let neu = dateInfo.counts.nutural
-                let neg = dateInfo.counts.negative
-      
-                sentimentCount["긍정"]! += pos
-                sentimentCount["중립"]! += neu
-                sentimentCount["부정"]! += neg
-                
-                totalCount += pos + neu + neg
-
-            }
-        }
-        
-        guard totalCount > 0 else {
-            print("⚠️ 데이터가 없습니다.")
+    
+    func calculateSentimentRatios(for sector: String, date: String) {
+        guard let sectorData = sectors[sector],
+              let dateInfo = sectorData.dates[date] else {
+            sentimentRatios = [:]
             return
         }
         
-        self.sentimentRatios = sentimentCount.mapValues { count in
-            (Double(count) / Double(totalCount)) * 100.0
+        let counts = dateInfo.counts
+        let total = counts.positive + counts.nutural + counts.negative
+        
+        guard total > 0 else {
+            sentimentRatios = [:]
+            return
         }
         
-        print("✅ 감정 비율 계산 완료 \(sectorName ?? "전체"):")
+        sentimentRatios = [
+            "긍정": Double(counts.positive) / Double(total) * 100.0,
+            "중립": Double(counts.nutural) / Double(total) * 100.0,
+            "부정": Double(counts.negative) / Double(total) * 100.0
+        ]
+        
         sentimentRatios.forEach { sentiment, ratio in
             print("\(sentiment): \(ratio)%")
         }
+        print("📊 감정 카운트 - 긍정: \(counts.positive), 중립: \(counts.nutural), 부정: \(counts.negative)")
+        print("📊 총합: \(total)")
     }
+    
+    
     
     func selectSector(_ sectorName: String) {
         self.selectedSector = sectorName
-        calculateSentimentRatios(forSector: sectorName)
+        
+        if let sectorData = sectors[sectorName],
+           let firstDate = sectorData.dates.keys.sorted().first {
+            calculateSentimentRatios(for: sectorName, date: firstDate)
+        } else {
+            sentimentRatios = [:]
+        }
+    }
+    
+    func injectSectorData(sector: String, data: SectorData) {
+        self.sectors[sector] = data
     }
 }

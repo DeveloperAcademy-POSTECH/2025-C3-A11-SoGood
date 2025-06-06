@@ -37,9 +37,10 @@ struct Public_Opinion_for_StockApp: App {
 
     var body: some Scene {
         WindowGroup {
+            IsaPreviousView()
 //            SentimentFrameView()
 //                .environmentObject(viewModel)
-            SentimentBarChart()
+//            SentimentBarChart()
         }
 //        .modelContainer(sharedModelContainer)
     }

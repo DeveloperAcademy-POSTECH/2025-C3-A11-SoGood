@@ -2,42 +2,46 @@ import SwiftUI
 
 
 struct SentimentSummaryView: View {
-    @StateObject private var viewModel = SectorViewModel()
+    @ObservedObject var viewModel: SectorViewModel
+    let sectorName: String
+    let selectedDate: String
     
     var body: some View {
         
         // FIXME: 네비게이션 뷰 수정 (최상단에서 NavigationStack 쌓아야할 듯)
         NavigationView {
-            VStack(spacing: 8) {
+            ScrollView {
                 
-                SentimentItemView(viewModel: viewModel, sentimentType: "긍정")
-                
-                SentimentItemView(viewModel: viewModel, sentimentType: "부정")
-                
-                SentimentItemView(viewModel: viewModel, sentimentType: "중립")
-                
-                Divider()
-                    .padding()
-                
-                // FIXME: 네비게이션 연결 및 넘어가는 데이터 설정
-                NavigationLink(destination: Text("detailDetailView")) {
-                    HStack {
-                        Text("316개의 의견보기")
-                            .font(.subheadline1)
+                VStack(spacing: 8) {
+                    
+                    SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "긍정")
+                    
+                    SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "부정")
+                    
+                    SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "중립")
+                    
+                    Divider()
+                        .padding()
+                    
+                    // FIXME: 네비게이션 연결 및 넘어가는 데이터 설정
+                    NavigationLink(destination: Text("detailDetailView")) {
+                        HStack {
+                            Text("316개의 의견보기")
+                                .font(.subheadline1)
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 16))
+                                .fontWeight(.medium)
+                        }
+                        .foregroundStyle(.lableSecondary)
                         
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 16))
-                            .fontWeight(.medium)
+                        
                     }
-                    .foregroundStyle(.lableSecondary)
+                    .padding(.bottom)
                     
-                    
+                    //                Spacer()
                 }
-                .padding(.bottom)
-                
-                Spacer()
             }
-            
             
         }
         
@@ -50,6 +54,8 @@ struct SentimentItemView: View {
     @ObservedObject var viewModel: SectorViewModel
     @State private var isExpanded: Bool = false
     
+    let sectorName: String
+    let selectedDate: String
     let sentimentType: String
     
     var sentimentColor: Color {
@@ -82,10 +88,25 @@ struct SentimentItemView: View {
         return nil
     }
     
-    var latestDateSummary: (headline: String, summary: String)? {
-        if let sectorData = currentSectorData,
-           let latestDate = sectorData.dates.keys.sorted().last,
-           let dateInfo = sectorData.dates[latestDate] {
+    //    var latestDateSummary: (headline: String, summary: String)? {
+    //        if let sectorData = currentSectorData,
+    //           let latestDate = sectorData.dates.keys.sorted().last,
+    //           let dateInfo = sectorData.dates[latestDate] {
+    //            switch sentimentType {
+    //            case "긍정":
+    //                return (dateInfo.summary.긍정.headline, dateInfo.summary.긍정.summary)
+    //            case "부정":
+    //                return (dateInfo.summary.부정.headline, dateInfo.summary.부정.summary)
+    //            default:
+    //                return (dateInfo.summary.중립.headline, dateInfo.summary.중립.summary)
+    //            }
+    //        }
+    //        return nil
+    //    }
+    
+    var summaryText: (headline: String, summary: String)? {
+        if let sectorData = viewModel.sectors[sectorName],
+           let dateInfo = sectorData.dates[selectedDate] {
             switch sentimentType {
             case "긍정":
                 return (dateInfo.summary.긍정.headline, dateInfo.summary.긍정.summary)
@@ -119,16 +140,19 @@ struct SentimentItemView: View {
                 
             }
             
-            if let summary = latestDateSummary {
+            if let summary = summaryText {
                 Text(summary.headline)
                     .font(isExpanded ? .body3 : .body2)
                     .foregroundStyle(.lablePrimary)
+                    .lineLimit(nil)
                 
                 
                 if isExpanded {
                     Text(summary.summary)
                         .font(.body1)
                         .foregroundStyle(.lablePrimary)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
             }
@@ -139,6 +163,6 @@ struct SentimentItemView: View {
     
 }
 
-#Preview {
-    SentimentSummaryView()
-}
+//#Preview {
+//    SentimentSummaryView()
+//}
