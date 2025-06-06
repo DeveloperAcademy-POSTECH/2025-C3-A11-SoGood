@@ -1,21 +1,12 @@
 import Foundation
-import FirebaseFirestore
 
-struct FavoriteItem: Identifiable {
+struct CategoryItem: Identifiable, Codable {
     let id: String
-    let name: String
     var isFavorite: Bool
-    var score: Int
     
-    init(id: String = UUID().uuidString, name: String, isFavorite: Bool = false, score: Int = 0) {
-        self.id = id
-        self.name = name
-        self.isFavorite = isFavorite
-        self.score = score
-    }
+    var name: String { id }  // id와 name이 동일
 }
 
-struct FavoriteSection {
-    let title: String
-    var items: [FavoriteItem]
+struct FavoriteState: Codable {
+    var categories: [String: Bool]
 }

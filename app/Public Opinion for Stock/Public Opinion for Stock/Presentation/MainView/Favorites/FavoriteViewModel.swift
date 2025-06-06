@@ -1,104 +1,96 @@
 import Foundation
-import FirebaseFirestore
 import Combine
 
 class FavoriteViewModel: ObservableObject {
-    @Published var investmentCategories: [FavoriteItem] = []
-    @Published var favoriteCategories: [FavoriteItem] = []
+    @Published var investmentCategories: [CategoryItem] = []
+    @Published var favoriteCategories: [CategoryItem] = []
     @Published var selectedCount: Int = 0
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    private let db = Firestore.firestore()
-    private var cancellables = Set<AnyCancellable>()
+    private let jsonFileName = "investment_categories"
+    private let userDefaultsKey = "favoriteCategories"
     
     init() {
-        fetchCategories()
+        loadCategories()
     }
     
-    private func fetchCategories() {
+    // MARK: - Data Loading
+    private func loadCategories() {
         isLoading = true
         errorMessage = nil
         
-        // 투자분야 카테고리 가져오기
-        db.collection("try_sector_detail_page").getDocuments { [weak self] snapshot, error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self?.errorMessage = "데이터를 가져오는데 실패했습니다: \(error.localizedDescription)"
-                    self?.isLoading = false
-                }
-                return
-            }
-            
-            let categories = snapshot?.documents.compactMap { document -> FavoriteItem? in
-                return FavoriteItem(
-                    id: document.documentID,
-                    name: document.documentID,
-                    isFavorite: false
-                )
-            } ?? []
-            
-            // 즐겨찾기 상태 가져오기
-            self?.db.collection("favorites").document("user_favorites").getDocument { [weak self] snapshot, error in
-                DispatchQueue.main.async {
-                    self?.isLoading = false
-                    if let error = error {
-                        self?.errorMessage = "즐겨찾기 데이터를 가져오는데 실패했습니다: \(error.localizedDescription)"
-                        return
-                    }
-                    
-                    let favoriteIds = (snapshot?.data()?["items"] as? [String]) ?? []
-                    
-                    // 즐겨찾기 상태 업데이트
-                    self?.investmentCategories = categories.map { item in
-                        var updatedItem = item
-                        updatedItem.isFavorite = favoriteIds.contains(item.id)
-                        return updatedItem
-                    }
-                    
-                    // 즐겨찾기 목록 업데이트
-                    self?.favoriteCategories = categories.filter { favoriteIds.contains($0.id) }
-                    self?.updateSelectedCount()
-                }
-            }
-        }
-    }
-    
-    func toggleFavorite(for item: FavoriteItem) {
-        if let index = favoriteCategories.firstIndex(where: { $0.id == item.id }) {
-            // 이미 즐겨찾기에 있으면 제거
-            favoriteCategories.remove(at: index)
-            if let investmentIndex = investmentCategories.firstIndex(where: { $0.id == item.id }) {
-                investmentCategories[investmentIndex].isFavorite = false
+        // 1. JSON 파일에서 카테고리 로드
+        if let url = Bundle.main.url(forResource: jsonFileName, withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let categories = try JSONSerialization.jsonObject(with: data) as? [String: Bool] ?? [:]
+                
+                // 2. UserDefaults에서 저장된 즐겨찾기 상태 로드
+                let savedFavorites = UserDefaults.standard.dictionary(forKey: userDefaultsKey) as? [String: Bool] ?? [:]
+                
+                // 3. CategoryItem 배열 생성
+                self.investmentCategories = categories.map { (id, _) in
+                    CategoryItem(id: id, isFavorite: savedFavorites[id] ?? false)
+                }.sorted { $0.id < $1.id }  // 알파벳 순 정렬
+                
+                // 4. 즐겨찾기 목록 업데이트
+                updateFavoritesList()
+                
+            } catch {
+                self.errorMessage = "카테고리 데이터를 불러오는데 실패했습니다: \(error.localizedDescription)"
             }
         } else {
-            // 즐겨찾기에 없고 10개 미만일 때만 추가
-            if favoriteCategories.count < 10 {
-                var newItem = item
-                newItem.isFavorite = true
-                favoriteCategories.append(newItem)
-                if let investmentIndex = investmentCategories.firstIndex(where: { $0.id == item.id }) {
-                    investmentCategories[investmentIndex].isFavorite = true
-                }
-            }
+            self.errorMessage = "카테고리 파일을 찾을 수 없습니다."
         }
-        updateSelectedCount()
+        
+        isLoading = false
     }
     
-    private func updateSelectedCount() {
+    // MARK: - Favorites Management
+    private func updateFavoritesList() {
+        favoriteCategories = investmentCategories.filter { $0.isFavorite }
         selectedCount = favoriteCategories.count
     }
     
-    func saveChanges() {
-        let favoriteIds = favoriteCategories.map { $0.id }
-        db.collection("favorites").document("user_favorites").setData([
-            "items": favoriteIds
-        ]) { [weak self] error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.errorMessage = "즐겨찾기 저장에 실패했습니다: \(error.localizedDescription)"
-                }
+    func toggleFavorite(for item: CategoryItem) {
+        guard let index = investmentCategories.firstIndex(where: { $0.id == item.id }) else { return }
+        
+        if item.isFavorite {
+            // 즐겨찾기 해제
+            investmentCategories[index].isFavorite = false
+        } else {
+            // 즐겨찾기 추가 (10개 제한)
+            if selectedCount < 10 {
+                investmentCategories[index].isFavorite = true
+            } else {
+                errorMessage = "즐겨찾기는 최대 10개까지만 가능합니다."
+                return
             }
         }
+        
+        updateFavoritesList()
+        saveChanges()
+    }
+    
+    // MARK: - Data Saving
+    func saveChanges() {
+        // 현재 즐겨찾기 상태를 Dictionary로 변환
+        let favorites = Dictionary(
+            uniqueKeysWithValues: investmentCategories.map { ($0.id, $0.isFavorite) }
+        )
+        
+        // UserDefaults에 저장
+        UserDefaults.standard.set(favorites, forKey: userDefaultsKey)
+    }
+    
+    // MARK: - Reset
+    func resetFavorites() {
+        // 모든 즐겨찾기 해제
+        investmentCategories = investmentCategories.map { item in
+            CategoryItem(id: item.id, isFavorite: false)
+        }
+        updateFavoritesList()
+        saveChanges()
     }
 }

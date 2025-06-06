@@ -28,14 +28,13 @@ struct FavoriteView: View {
                     .font(.body2)
                     .foregroundColor(Color(.bluePrimary))
                 }
-                //로딩중일때 뜨는 창
+                
                 if viewModel.isLoading {
                     Spacer()
                     ProgressView()
                         .scaleEffect(1.5)
                     Spacer()
                 } else if let errorMessage = viewModel.errorMessage {
-                    //오류났을때 뜨는 창
                     Spacer()
                     VStack(spacing: 16) {
                         Text("오류가 발생했습니다")
@@ -49,7 +48,6 @@ struct FavoriteView: View {
                     .padding()
                     Spacer()
                 } else {
-                    //정상적으로 작동될때의 창
                     ScrollView {
                         VStack(alignment: .leading, spacing: 40) {
                             // 즐겨찾기 섹션
@@ -118,7 +116,7 @@ struct FavoriteView: View {
 }
 
 struct CategoryRow: View {
-    let item: FavoriteItem
+    let item: CategoryItem  // FavoriteItem에서 CategoryItem으로 변경
     let isFavorite: Bool
     let onToggle: () -> Void
     
@@ -140,14 +138,15 @@ struct CategoryRow: View {
                 Button(action: onToggle) {
                     Image(systemName: isFavorite ? "minus.circle.fill" : "plus.circle.fill")
                         .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(isFavorite ? .redPrimary : .accent)
+                        .foregroundColor(isFavorite ? .red : .green)  // .redPrimary와 .accent 대신 .red와 .green 사용
                 }
             }
+            .padding(.horizontal, 16)
  
             Divider()
                 .background(Color(.tertiaryLabel))
         }
-        .padding(.bottom,8)
+        .padding(.bottom, 8)
     }
 }
 
