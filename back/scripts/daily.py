@@ -11,8 +11,8 @@ import json
 
 current_dir = Path(__file__).parent
 
-async def daily_task():
-    crawled_data, for_gemini_crawled_data = await crawl_filtered_data_from_telegram(14)
+async def daily_task(n):
+    crawled_data, for_gemini_crawled_data = await crawl_filtered_data_from_telegram(n)
     gemini_result_data = daily_scoring(for_gemini_crawled_data, {})
 
     put_data = PutData()
