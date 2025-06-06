@@ -7,32 +7,23 @@ import re
 sys.path.append(str(Path(__file__).parents[2]))
 from data.telegram_raw_datas import avoid_channels, sectors
 
-## 채널 및 제거하고 싶은 채널 제거
-def filter_channel(client):
-    channels = []
-    # 채널 목록 가져오기
-    dialogs = client.get_dialogs()
-
-    for dialog in dialogs:
-        entity = dialog.entity
-        if isinstance(entity, Channel):
-            if entity.title not in avoid_channels:
-                channels.append(entity.id)
-    return channels
-
 # 해당 채널이 제거할 
 def check_channel(channel):
     return "" if channel in avoid_channels else channel
 
-## 메시지에서 찾은 섹터 반환
-def find_sector(messages):
-    found_sectors = []
-    for sector in sectors:
-        for message in messages:
-            if sector in message.message:
-                found_sectors.append(sector)
-    ## 중복 제거를 위해 set 사용
-    return list(set(found_sectors))
+## 메시지에서 찾은 섹터 반환 []로 반환
+def find_sector(message):
+    try:
+        found_sectors = []
+        for sector, keywords in sectors.items():
+            for keyword in keywords:
+                if keyword in message:
+                    found_sectors.append(sector)
+                    break
+        return list(set(found_sectors))
+    except Exception as e:
+        print(f"find_sector Error: {e}")
+        return []
 
 
 # 8개 이상의 공백 \n 대체 + 뉴스기사 위주 text 0으로 return
@@ -57,7 +48,7 @@ def message_filter(message):
     remaining_text_length = len(text_without_urls.strip())
     
     # URL 길이 총합이 나머지 텍스트보다 짧으면 0 반환
-    if url_total_length > remaining_text_length:
+    if url_total_length > remaining_text_length or len(cleaned_message) < 25:
         return 0
         
     return cleaned_message

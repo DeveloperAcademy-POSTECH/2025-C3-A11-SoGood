@@ -29,7 +29,7 @@ sectors = {
 }
 
 # 크롤링시 피해야 할 채널
-avoid_channels = ['ㅇㅇ','ㄱㄴㄷ','아ㅏ아', 'coin_상장_news', '화장품, 실리콘투, 뷰티',
+avoid_channels = ['ㅇㅇ','ㄱㄴㄷ','아ㅏ아', 'coin_상장_news', '화장품, 실리콘투, 뷰티', '블록미디어',
                   '코백남 공지방', '코인같이투자 정보 에어드랍', '⚡️차설 텔레그램 코인방⚡️', 'COINNESS News Feed (코인니스)',
                   'xKuCoin Channel', '파동여신_비트시황', 'DeFi 농부 👨🏻‍🌾 조선생', 'Story - Korean Fan Page Chat', 
                   'MJ의 라스트댄스', '몽타의 보통펀치', 'MJ 타점공유',
