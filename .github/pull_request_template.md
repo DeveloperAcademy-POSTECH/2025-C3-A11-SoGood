@@ -16,3 +16,4 @@
 - [ ] @junhajk
 - [ ] @karynkim 
 - [ ] @seungjaeyuu
+- [ ] @ChocopieA
