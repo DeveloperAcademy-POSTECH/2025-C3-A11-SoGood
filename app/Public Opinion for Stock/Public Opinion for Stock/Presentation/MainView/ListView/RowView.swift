@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RowView: View {
     let index: Int
-    let item: RowItem_test
+    let item: RowItem
 
     var valueColor: Color {
         if item.value > 0 {
@@ -23,11 +23,11 @@ struct RowView: View {
 
     var valueText: String {
         if item.value > 0 {
-            return "+\(item.value)%"
+            return "+\(item.value)"
         } else if item.value < 0 {
-            return "\(item.value)%"
+            return "\(item.value)"
         } else {
-            return "0%"
+            return "0"
         }
     }
 
