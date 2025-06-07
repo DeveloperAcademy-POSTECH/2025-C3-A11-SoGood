@@ -1,5 +1,5 @@
-from telegram_auth import TelegramAuth
-from telegram_filter import filter_channel, find_sector
+from telegram.auth import TelegramAuth
+from telegram.filter import filter_channel, find_sector
 import asyncio
 
 
