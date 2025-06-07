@@ -23,42 +23,40 @@ struct ListView: View {
         }
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                VStack (alignment: .leading, spacing: 8) {
-                    Text("투자분야 반응")
-                        .font(.title)
-                        .foregroundColor(.lablePrimary)
-                    
-                    Text("26개 종목의 긍정과 부정 의견 점수를 나타내요.")
-                        .font(.body1)
-                        .foregroundColor(.lablePrimary)
-                    
-                    Text(formattedDate(viewModel.yesterday))
-                        .font(.caption2)
-                        .foregroundColor(.lableSecondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading)
+        VStack {
+            VStack (alignment: .leading, spacing: 8) {
+                Text("투자분야 반응")
+                    .font(.title)
+                    .foregroundColor(.lablePrimary)
                 
-                //리스트 코드 (RowView를 불러와서 나열)
-                List {
-                    ForEach(Array(sortedItems.enumerated()), id: \.element.id) { index, item in
-                        //Navigation으로 DetailView로 넘겨줄때 정렬된 데이터들, 날짜를 보내줌
-                        NavigationLink(destination: DetailView(
-                            items: sortedItems,
-                            name: item.name,
-                            date: viewModel.yesterday
-                        )
-                        ) {
-                            RowView(index: index, item: item)
-                        }
+                Text("26개 종목의 긍정과 부정 의견 점수를 나타내요.")
+                    .font(.body1)
+                    .foregroundColor(.lablePrimary)
+                
+                Text(formattedDate(viewModel.yesterday))
+                    .font(.caption2)
+                    .foregroundColor(.lableSecondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading)
+            
+            //리스트 코드 (RowView를 불러와서 나열)
+            LazyVStack {
+                ForEach(Array(sortedItems.enumerated()), id: \.element.id) { index, item in
+                    //Navigation으로 DetailView로 넘겨줄때 정렬된 데이터들, 날짜를 보내줌
+                    NavigationLink(destination: DetailView(
+                        items: sortedItems,
+                        name: item.name,
+                        date: viewModel.yesterday
+                    )
+                    ) {
+                        RowView(index: index, item: item)
                     }
                 }
-                .listStyle(.plain)
-                .onAppear {
-                    viewModel.fetchSectorScores()
-                }
+            }
+            .listStyle(.plain)
+            .onAppear {
+                viewModel.fetchSectorScores()
             }
         }
     }
