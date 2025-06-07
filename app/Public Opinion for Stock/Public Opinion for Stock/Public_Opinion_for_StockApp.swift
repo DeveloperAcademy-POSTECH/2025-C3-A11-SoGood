@@ -41,7 +41,6 @@ struct Public_Opinion_for_StockApp: App {
                 .environmentObject(viewModel)
             ListView()
                 .environmentObject(viewModel)
-            SentimentBarChart()
         }
         .modelContainer(sharedModelContainer)
     }

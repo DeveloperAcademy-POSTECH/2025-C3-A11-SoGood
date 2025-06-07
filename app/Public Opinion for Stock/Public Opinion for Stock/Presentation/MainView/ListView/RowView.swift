@@ -30,15 +30,17 @@ struct RowView: View {
             return "0"
         }
     }
-
+    
     var body: some View {
         HStack {
             Text("\(index + 1)")
                 .font(.headline1)
                 .frame(width: 24)
                 .foregroundColor(.lableSecondary)
-            Image(systemName: "cpu")
-                .foregroundColor(.blue)
+            Image(item.iconName)
+                .resizable()
+                .frame(width: 44, height: 44)
+                .padding(.trailing, 8)
             Text(item.name)
                 .font(.headline1)
                 .frame(width: 120, alignment: .leading)
@@ -47,6 +49,6 @@ struct RowView: View {
                 .font(.headline2)
                 .foregroundColor(valueColor)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 4)
     }
 }
