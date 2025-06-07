@@ -1,7 +1,21 @@
-//
-//  MainView.swift
-//  Public Opinion for Stock
-//
-//  Created by 유승재 on 6/2/25.
-//
+import SwiftUI
 
+struct MainView: View {
+    @StateObject private var favoriteViewModel = FavoriteViewModel()
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack {
+                    Spacer()
+                    TreeMapView(favoriteViewModel: favoriteViewModel)
+                    ListView()
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    MainView()
+}

@@ -21,7 +21,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct Public_Opinion_for_StockApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject private var viewModel = SentimentViewModel(category: "IT")
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -37,10 +36,7 @@ struct Public_Opinion_for_StockApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SentimentFrameView()
-                .environmentObject(viewModel)
-            ListView()
-                .environmentObject(viewModel)
+            ContentView()
         }
         .modelContainer(sharedModelContainer)
     }
