@@ -8,6 +8,7 @@
 __pycache__/
 firebase-key.json
 *.log
+.DS_Store
 
 ## User settings
 xcuserdata/
