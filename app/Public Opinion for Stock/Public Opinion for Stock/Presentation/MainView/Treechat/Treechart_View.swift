@@ -23,25 +23,64 @@ struct BlockView: View {
 
 struct TreemapView: View {
     @StateObject private var viewModel: TreemapViewModel
+    @ObservedObject var favoriteViewModel: FavoriteViewModel
+    @State private var showingFavoriteView = false
     private let size: CGSize
     
-    init(size: CGSize = CGSize(width: 361, height: 252)) {
+    init(favoriteViewModel: FavoriteViewModel, size: CGSize = CGSize(width: 361, height: 252)) {
         self.size = size
-        _viewModel = StateObject(wrappedValue: TreemapViewModel(size: size))
+        self._viewModel = StateObject(wrappedValue: TreemapViewModel(size: size))
+        self.favoriteViewModel = favoriteViewModel
     }
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            ForEach(viewModel.blocks) { block in
-                BlockView(block: block)
-                    .position(x: block.rect.midX, y: block.rect.midY)
+        NavigationStack {
+            VStack {
+                HStack {
+                    Text("즐겨찾기 항목")
+                        .font(.title)
+                        .foregroundColor(.primary)
+                    Spacer()
+                    NavigationLink {
+                        FavoriteView(viewModel: favoriteViewModel)
+                    } label: {
+                        Text("편집")
+                            .font(.body2)
+                            .foregroundColor(Color(.bluePrimary))
+                    }
+                }
+                .padding(.horizontal)
+                
+                Group {
+                    if favoriteViewModel.favoriteCategories.isEmpty {
+                        VStack {
+                            Text("즐겨찾기 항목을 추가해주세요.")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                        }
+                        .frame(width: size.width, height: size.height)
+                    } else {
+                        ZStack(alignment: .topLeading) {
+                            ForEach(viewModel.blocks) { block in
+                                BlockView(block: block)
+                                    .position(x: block.rect.midX, y: block.rect.midY)
+                            }
+                        }
+                        .frame(width: size.width, height: size.height)
+                        .onAppear {
+                            viewModel.updateData(with: favoriteViewModel)
+                        }
+                        .onChange(of: favoriteViewModel.favoriteCategories.count) { oldValue, newValue in
+                            viewModel.updateData(with: favoriteViewModel)
+                        }
+                    }
+                }
+                .padding(16)
             }
         }
-        .frame(width: size.width, height: size.height)
-        .padding(16)
     }
 }
 
-#Preview{
-    TreemapView()
+#Preview {
+    TreemapView(favoriteViewModel: FavoriteViewModel())
 }

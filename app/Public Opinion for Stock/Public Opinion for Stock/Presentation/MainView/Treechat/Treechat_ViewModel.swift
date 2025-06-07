@@ -6,7 +6,24 @@ class TreemapViewModel: ObservableObject {
     
     init(size: CGSize) {  // 기본값 제거
         self.size = size
-        generateBlocks()
+    }
+    
+    func updateData(with favoriteViewModel: FavoriteViewModel) {
+        let data = StockData.getDataFromFavorites(favoriteViewModel)
+        let sortedData = sortData(data)
+        let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        let rects = calculateTreemapLayout(data: sortedData, frame: frame)
+        
+        self.blocks = zip(sortedData, rects).map { item, rect in
+            TreemapBlock(
+                value: item.totalValue,
+                rect: rect,
+                label: item.label,
+                percent: item.percentString,
+                sentiment: item.sentiment,
+                color: item.sentiment.backgroundColor
+            )
+        }
     }
     
     private func sortData(_ data: [StockData]) -> [StockData] {
@@ -116,24 +133,5 @@ class TreemapViewModel: ObservableObject {
         }
         
         return rects
-    }
-    
-    
-    private func generateBlocks() {
-        let data = StockData.sampleData
-        let sortedData = sortData(data)
-        let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        let rects = calculateTreemapLayout(data: sortedData, frame: frame)
-        
-        self.blocks = zip(sortedData, rects).map { item, rect in
-            TreemapBlock(
-                value: item.totalValue,
-                rect: rect,
-                label: item.label,
-                percent: item.percentString,
-                sentiment: item.sentiment,
-                color: item.sentiment.backgroundColor
-            )
-        }
     }
 }

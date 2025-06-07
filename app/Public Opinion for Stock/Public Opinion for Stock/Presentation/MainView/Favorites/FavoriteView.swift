@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FavoriteView: View {
-    @ObservedObject private var viewModel = FavoriteViewModel()
+    @ObservedObject var viewModel: FavoriteViewModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -102,6 +102,7 @@ struct FavoriteView: View {
                 }
             }
         }
+        .navigationBarHidden(true)
         .alert(item: Binding(
             get: { viewModel.errorMessage.map { ErrorWrapper(message: $0) } },
             set: { _ in viewModel.errorMessage = nil }
@@ -156,5 +157,5 @@ private struct ErrorWrapper: Identifiable {
 }
 
 #Preview {
-    FavoriteView()
+    FavoriteView(viewModel: FavoriteViewModel())
 }
