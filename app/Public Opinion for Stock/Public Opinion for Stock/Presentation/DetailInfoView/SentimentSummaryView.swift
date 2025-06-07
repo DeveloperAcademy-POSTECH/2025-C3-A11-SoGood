@@ -121,9 +121,9 @@ struct SentimentItemView: View {
             if let summary = summaryText {
                 Text(summary.headline)
                     .font(isExpanded ? .body3 : .body2)
-                    .foregroundStyle(.lablePrimary)
+                    .foregroundStyle(.lableTeritary)
                     .lineLimit(nil)
-                
+                    .padding(.vertical, 4)
                 
                 if isExpanded {
                     Text(summary.summary)
@@ -131,6 +131,7 @@ struct SentimentItemView: View {
                         .foregroundStyle(.lablePrimary)
                         .lineLimit(nil)
                         .fixedSize(horizontal: false, vertical: true)
+                        .lineSpacing(8)
                 }
                 
             }

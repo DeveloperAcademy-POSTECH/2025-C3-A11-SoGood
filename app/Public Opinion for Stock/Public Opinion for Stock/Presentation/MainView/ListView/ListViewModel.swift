@@ -37,7 +37,7 @@ final class ListViewModel: ObservableObject {
                                 emotionScore = Int(Double(negative) / Double(total) * 100) * -1
                             }
                         }
-                        tempItems.append(RowItem(name: sector, value: emotionScore))
+                        tempItems.append(RowItem(name: sector, value: emotionScore, iconName: sector))
                     }
                 }
             }
