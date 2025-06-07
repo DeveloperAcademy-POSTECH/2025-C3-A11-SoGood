@@ -4,7 +4,9 @@ import Charts
 
 struct SentimentBarChart: View {
     @StateObject private var viewModel = SectorViewModel(shouldLoad: false)
-    @State private var selectedTab = 0
+    @State private var selectedIndex: Int
+    @State private var currentSectorName: String
+    @State private var currentSectorData: SectorData
     
     
     private var sentimentOrder = ["긍정", "중립", "부정"]
@@ -17,18 +19,24 @@ struct SentimentBarChart: View {
     let sectorName: String
     let sectorData: SectorData
     let allSector: [String]
+    let allSectorData: [String: SectorData]
     let selectedDate: String
-
+    
     init(
         sectorName: String,
         sectorData: SectorData,
         allSector: [String],
+        allSectorData: [String: SectorData],
         selectedDate: String
     ) {
         self.sectorName = sectorName
         self.sectorData = sectorData
         self.allSector = allSector
+        self.allSectorData = allSectorData
         self.selectedDate = selectedDate
+        self._selectedIndex = State(initialValue: allSector.firstIndex(of: sectorName) ?? 0)
+        self._currentSectorName = State(initialValue: sectorName)
+        self._currentSectorData = State(initialValue: sectorData)
     }
     
     
@@ -40,16 +48,43 @@ struct SentimentBarChart: View {
             VStack(alignment: .leading) {
                 
                 // MARK: - 탭바
-                // FIXME: 버튼으로 변경?
-                HStack(spacing: 24) {
-                    Spacer()
-                    
-                    // FIXME: 데이터 수정
-                    
-                    Text(allSector.joined(separator: ", "))
-                        .font(.headline2)
-                    Spacer()
-                }.padding()
+                
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 24) {
+                            ForEach(allSector.indices, id: \.self) { index in
+                                Text(allSector[index])
+                                    .font(.headline2)
+                                    .foregroundStyle(index == selectedIndex ? .black : .gray)
+                                    .id(index)
+                                    .onTapGesture {
+                                        withAnimation {
+                                            selectedIndex = index
+                                        }
+                                    }
+                            }
+                            
+                        
+                            
+                            
+                        }
+                        .frame(height: 40)
+                        .padding(.vertical, 8)
+                    }
+                    .onChange(of: selectedIndex, initial: true) { _, newIndex in
+                        withAnimation {
+                            proxy.scrollTo(newIndex, anchor: .center)
+                        }
+                        let newSectorName = allSector[newIndex]
+                        if let newData = allSectorData[newSectorName] {
+                            currentSectorName = newSectorName
+                            currentSectorData = newData
+                            viewModel.injectSectorData(sector: newSectorName, data: newData)
+                            viewModel.calculateSentimentRatios(for: newSectorName, date: selectedDate)
+                        }
+                    }
+                }
+                
                 
                 // MARK: - 오늘 대중의 이야기 섹터
                 HStack {
@@ -76,7 +111,8 @@ struct SentimentBarChart: View {
                     
                 }.padding(.bottom, 4)
                 
-                Text("\(sectorName) 종목에 대한 사람들의 반응을 모아봤어요.")
+                Text("\(currentSectorName) 종목에 대한 사람들의 반응을 모아봤어요.")
+                    .multilineTextAlignment(.leading)
                     .font(.subheadline1)
                     .foregroundStyle(.lablePrimary)
                     .padding(.bottom, 37)
@@ -145,40 +181,53 @@ struct SentimentBarChart: View {
                 }
                 .padding(.bottom, 37)
                 
+                SentimentSummaryView(
+                    viewModel: viewModel,
+                    sectorName: currentSectorName,
+                    selectedDate: selectedDate
+                )
+                
+                
             }
             .padding(.horizontal, 16)
             .onAppear {
                 viewModel.injectSectorData(sector: sectorName, data: sectorData)
                 viewModel.calculateSentimentRatios(for: sectorName, date: selectedDate)
             }
+            .onChange(of: selectedIndex, initial: false) { _, newIndex  in
+                let newSectorName = allSector[newIndex]
+                
+                if let newData = allSectorData[newSectorName] {
+                    currentSectorName = newSectorName
+                    currentSectorData = newData
+                    viewModel.injectSectorData(sector: newSectorName, data: newData)
+                    viewModel.calculateSentimentRatios(for: newSectorName, date: selectedDate)
+                }
+            }
+            }
             
-            SentimentSummaryView(
-                viewModel: viewModel,
-                sectorName: sectorName,
-                selectedDate: selectedDate
-            )
             
-            Spacer()
-            
-        }
+
+        
     }
-    
-    private func getSentimentLabel(_ sentiment: String) -> String {
-        switch sentiment {
-        case "긍정":
-            return "긍정적"
-        case "중립":
-            return "중립적"
-        case "부정":
-            return "부정적"
-        default:
-            return sentiment
-        }
+}
+
+private func getSentimentLabel(_ sentiment: String) -> String {
+    switch sentiment {
+    case "긍정":
+        return "긍정적"
+    case "중립":
+        return "중립적"
+    case "부정":
+        return "부정적"
+    default:
+        return sentiment
     }
 }
 
 
 
+
 #Preview {
-//    SentimentBarChart(sectorName: "IT", sectorData: SectorData(id: "dummy", dates: [:]), allSector: ["IT", "바이오", "반도체"], selectedDate: "2025-05-21")
+    //    SentimentBarChart(sectorName: "IT", sectorData: SectorData(id: "dummy", dates: [:]), allSector: ["IT", "바이오", "반도체"], selectedDate: "2025-05-21")
 }

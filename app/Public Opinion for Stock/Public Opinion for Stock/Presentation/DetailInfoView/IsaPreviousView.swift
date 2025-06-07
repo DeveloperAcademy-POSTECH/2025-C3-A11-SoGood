@@ -41,6 +41,7 @@ struct IsaPreviousView: View {
                                 sectorName: item.name,
                                 sectorData: item.data,
                                 allSector: sectorTitles,
+                                allSectorData: viewModel.sectors,
                                 selectedDate: latestDate
                             )
                         ) {

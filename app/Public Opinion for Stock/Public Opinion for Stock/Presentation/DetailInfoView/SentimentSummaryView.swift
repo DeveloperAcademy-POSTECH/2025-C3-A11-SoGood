@@ -8,44 +8,37 @@ struct SentimentSummaryView: View {
     
     var body: some View {
         
-        // FIXME: 네비게이션 뷰 수정 (최상단에서 NavigationStack 쌓아야할 듯)
-        NavigationView {
-            ScrollView {
-                
-                VStack(spacing: 8) {
-                    
-                    SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "긍정")
-                    
-                    SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "부정")
-                    
-                    SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "중립")
-                    
-                    Divider()
-                        .padding()
-                    
-                    // FIXME: 네비게이션 연결 및 넘어가는 데이터 설정
-                    NavigationLink(destination: Text("detailDetailView")) {
-                        HStack {
-                            Text("316개의 의견보기")
-                                .font(.subheadline1)
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 16))
-                                .fontWeight(.medium)
-                        }
-                        .foregroundStyle(.lableSecondary)
-                        
-                        
-                    }
-                    .padding(.bottom)
-                    
-                    //                Spacer()
-                }
-            }
-            
-        }
         
+        VStack(spacing: 8) {
+            
+            SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "긍정")
+            
+            SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "부정")
+            
+            SentimentItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "중립")
+            
+            Divider()
+                .padding()
+            
+            // FIXME: 네비게이션 연결 및 넘어가는 데이터 설정
+            NavigationLink(destination: Text("detailDetailView")) {
+                HStack {
+                    Text("316개의 의견보기")
+                        .font(.subheadline1)
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 16))
+                        .fontWeight(.medium)
+                }
+                .foregroundStyle(.lableSecondary)
+                
+                
+            }
+            .padding(.horizontal, -16)
+            .padding(.bottom)
+        }
     }
+    
 }
 
 
@@ -87,22 +80,7 @@ struct SentimentItemView: View {
         }
         return nil
     }
-    
-    //    var latestDateSummary: (headline: String, summary: String)? {
-    //        if let sectorData = currentSectorData,
-    //           let latestDate = sectorData.dates.keys.sorted().last,
-    //           let dateInfo = sectorData.dates[latestDate] {
-    //            switch sentimentType {
-    //            case "긍정":
-    //                return (dateInfo.summary.긍정.headline, dateInfo.summary.긍정.summary)
-    //            case "부정":
-    //                return (dateInfo.summary.부정.headline, dateInfo.summary.부정.summary)
-    //            default:
-    //                return (dateInfo.summary.중립.headline, dateInfo.summary.중립.summary)
-    //            }
-    //        }
-    //        return nil
-    //    }
+
     
     var summaryText: (headline: String, summary: String)? {
         if let sectorData = viewModel.sectors[sectorName],
@@ -158,7 +136,7 @@ struct SentimentItemView: View {
             }
             
         }
-        .padding()
+        .padding(.vertical)
     }
     
 }
