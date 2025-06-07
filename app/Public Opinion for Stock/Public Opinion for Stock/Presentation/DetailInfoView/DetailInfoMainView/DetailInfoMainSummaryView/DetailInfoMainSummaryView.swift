@@ -3,17 +3,16 @@ import SwiftUI
 
 struct DetailInfoMainSummaryView: View {
     @ObservedObject var viewModel: SectorViewModel
-    let sectorName: String
+    @Binding var selectedSector: String
     let selectedDate: String
     
     var body: some View {
         
-        
         VStack(spacing: 8) {
             
-            DetailInfoSummaryItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "긍정")
-            DetailInfoSummaryItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "부정")
-            DetailInfoSummaryItemView(viewModel: viewModel, sectorName: sectorName, selectedDate: selectedDate, sentimentType: "중립")
+            DetailInfoSummaryItemView(viewModel: viewModel, selectedSector: $selectedSector, selectedDate: selectedDate, sentimentType: "긍정")
+            DetailInfoSummaryItemView(viewModel: viewModel, selectedSector: $selectedSector, selectedDate: selectedDate, sentimentType: "부정")
+            DetailInfoSummaryItemView(viewModel: viewModel, selectedSector: $selectedSector, selectedDate: selectedDate, sentimentType: "중립")
             
             Divider()
                 .padding()

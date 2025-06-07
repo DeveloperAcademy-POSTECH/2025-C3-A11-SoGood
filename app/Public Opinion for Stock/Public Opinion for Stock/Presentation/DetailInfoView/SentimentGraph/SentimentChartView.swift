@@ -22,7 +22,7 @@ struct SentimentPoint: Identifiable {
     let id = UUID()
     let date: String
     let value: Int
-    let type: String // "긍정적" or "부정적"
+    let type: String
 }
 
 struct SentimentChartView: View {

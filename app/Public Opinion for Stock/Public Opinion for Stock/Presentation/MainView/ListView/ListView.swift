@@ -17,7 +17,7 @@ struct ListView: View {
     //날짜 포맷 함수
     func formattedDate(_ date: Date) -> String {
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy년 MM월dd일 기준"
+            formatter.dateFormat = "yyyy-MM-dd"
             formatter.locale = Locale(identifier: "ko_KR")
             return formatter.string(from: date)
         }
@@ -43,10 +43,10 @@ struct ListView: View {
             LazyVStack {
                 ForEach(Array(sortedItems.enumerated()), id: \.element.id) { index, item in
                     //Navigation으로 DetailView로 넘겨줄때 정렬된 데이터들, 날짜를 보내줌
-                    NavigationLink(destination: DetailView(
+                    NavigationLink(destination: DetailInfoView(
                         items: sortedItems,
                         name: item.name,
-                        date: viewModel.yesterday
+                        date: formattedDate(viewModel.yesterday)
                     )
                     ) {
                         RowView(index: index, item: item)

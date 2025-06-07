@@ -2,19 +2,25 @@ import SwiftUI
 
 struct DetailInfoMainView: View {
     @ObservedObject var viewModel: SectorViewModel
-    let currentSectorName: String
-    let selectedDate: String
+    @Binding var selectedSector: String
+    let date: String
+    
+    init(viewModel: SectorViewModel, selectedSector: Binding<String>, date: String) {
+        self.viewModel = viewModel
+        self._selectedSector = selectedSector
+        self.date = date
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
-            DetailInfoMainTopView(currentSectorName: currentSectorName)
+            DetailInfoMainTopView(currentSectorName: selectedSector)
             
             DetailInfoMainChartView(viewModel: viewModel)
             
-            SentimentSummaryView(
+            DetailInfoMainSummaryView(
                 viewModel: viewModel,
-                sectorName: currentSectorName,
-                selectedDate: selectedDate
+                selectedSector: $selectedSector,
+                selectedDate: date
             )
         }
         .padding(.horizontal, 16)

@@ -4,7 +4,7 @@ struct DetailInfoSummaryItemView: View {
     @ObservedObject var viewModel: SectorViewModel
     @State private var isExpanded: Bool = false
     
-    let sectorName: String
+    @Binding var selectedSector: String
     let selectedDate: String
     let sentimentType: String
     
@@ -40,7 +40,7 @@ struct DetailInfoSummaryItemView: View {
 
     
     var summaryText: (headline: String, summary: String)? {
-        if let sectorData = viewModel.sectors[sectorName],
+        if let sectorData = viewModel.sectors[selectedSector],
            let dateInfo = sectorData.dates[selectedDate] {
             switch sentimentType {
             case "긍정":
