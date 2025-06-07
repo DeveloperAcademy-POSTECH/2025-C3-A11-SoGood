@@ -4,7 +4,9 @@ import FirebaseFirestore
 class SectorViewModel: ObservableObject {
     @Published var sectors: [String: SectorData] = [:]
     @Published var selectedSector: String? = nil
+
     @Published var sentimentRatios: [String: Double] = [:]
+
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
@@ -67,14 +69,12 @@ class SectorViewModel: ObservableObject {
                         group.leave()
                     }
                 }
-            }
-            
+            }         
             group.notify(queue: .main) { [weak self] in
                 guard let self = self else { return }
                 self.sectors = sectorDataDict
                 self.selectedSector = sectors.first
-                
-                
+                         
                 DispatchQueue.main.async {
                     if let sector = self.selectedSector,
                        let date = self.sectors[sector]?.dates.keys.sorted().first {
@@ -83,59 +83,10 @@ class SectorViewModel: ObservableObject {
                         self.sentimentRatios = [:]
                     }
                     self.isLoading = false
-                    
                 }
             }
         }
     }
-    //
-    //    // 특정 섹터의 감정 비율 계산
-    //    func calculateSentimentRatios(forSector sectorName: String? = nil) {
-    //        var sentimentCount: [String: Int] = ["긍정": 0, "중립": 0, "부정": 0]
-    //        var totalCount = 0
-    //
-    //        let sectorsToCalculate: [String: SectorData]
-    //        if let sectorName = sectorName {
-    //            if let sectorData = sectors[sectorName] {
-    //                sectorsToCalculate = [sectorName: sectorData]
-    //            } else {
-    //                return
-    //            }
-    //        } else {
-    //            sectorsToCalculate = sectors
-    //        }
-    //
-    //        // 감정 카운트 합산
-    //        for (_, sectorData) in sectorsToCalculate {
-    //            for (_, dateInfo) in sectorData.dates {
-    //                let pos = dateInfo.counts.positive
-    //                let neu = dateInfo.counts.nutural
-    //                let neg = dateInfo.counts.negative
-    //
-    //                sentimentCount["긍정"]! += pos
-    //                sentimentCount["중립"]! += neu
-    //                sentimentCount["부정"]! += neg
-    //
-    //                totalCount += pos + neu + neg
-    //
-    //            }
-    //        }
-    //
-    //        guard totalCount > 0 else {
-    //            print("⚠️ 데이터가 없습니다.")
-    //            return
-    //        }
-    //
-    //        self.sentimentRatios = sentimentCount.mapValues { count in
-    //            (Double(count) / Double(totalCount)) * 100.0
-    //        }
-    //
-    //        print("✅ 감정 비율 계산 완료 \(sectorName ?? "전체"):")
-    //        sentimentRatios.forEach { sentiment, ratio in
-    //            print("\(sentiment): \(ratio)%")
-    //        }
-    //    }
-    
     
     func calculateSentimentRatios(for sector: String, date: String) {
         guard let sectorData = sectors[sector],
@@ -157,15 +108,7 @@ class SectorViewModel: ObservableObject {
             "중립": Double(counts.nutural) / Double(total) * 100.0,
             "부정": Double(counts.negative) / Double(total) * 100.0
         ]
-        
-        sentimentRatios.forEach { sentiment, ratio in
-            print("\(sentiment): \(ratio)%")
-        }
-        print("📊 감정 카운트 - 긍정: \(counts.positive), 중립: \(counts.nutural), 부정: \(counts.negative)")
-        print("📊 총합: \(total)")
     }
-    
-    
     
     func selectSector(_ sectorName: String) {
         self.selectedSector = sectorName

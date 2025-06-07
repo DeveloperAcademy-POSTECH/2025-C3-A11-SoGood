@@ -10,7 +10,6 @@ import SwiftUI
 // TODO: 추후 삭제
 struct IsaPreviousView: View {
     @StateObject private var viewModel = SectorViewModel()
-//    @State var sectors: [String] = []
     var sectorTitles: [String] {
         Array(viewModel.sectors.keys).sorted()
     }

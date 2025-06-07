@@ -40,15 +40,11 @@ struct SentimentBarChart: View {
     }
     
     
-    
     var body: some View {
         
         ScrollView() {
-            
             VStack(alignment: .leading) {
-                
                 // MARK: - 탭바
-                
                 ScrollViewReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 24) {
@@ -63,10 +59,6 @@ struct SentimentBarChart: View {
                                         }
                                     }
                             }
-                            
-                        
-                            
-                            
                         }
                         .frame(height: 40)
                         .padding(.vertical, 8)
@@ -84,8 +76,6 @@ struct SentimentBarChart: View {
                         }
                     }
                 }
-                
-                
                 // MARK: - 오늘 대중의 이야기 섹터
                 HStack {
                     Text("오늘 대중의 이야기")
@@ -223,11 +213,4 @@ private func getSentimentLabel(_ sentiment: String) -> String {
     default:
         return sentiment
     }
-}
-
-
-
-
-#Preview {
-    //    SentimentBarChart(sectorName: "IT", sectorData: SectorData(id: "dummy", dates: [:]), allSector: ["IT", "바이오", "반도체"], selectedDate: "2025-05-21")
 }

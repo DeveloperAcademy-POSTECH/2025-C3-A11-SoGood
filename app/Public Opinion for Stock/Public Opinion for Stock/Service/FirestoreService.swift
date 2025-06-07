@@ -16,7 +16,6 @@ class FirestoreService {
                 return
             }
             let sectors = snapshot?.documents.map { $0.documentID } ?? []
-            print("받아온 섹터 리스트: \(sectors)")
             completion(sectors)
         }
     }
@@ -28,12 +27,10 @@ class FirestoreService {
             .collection("dates")
             .getDocuments { snapshot, error in
                 if let error = error {
-                    print("Error getting dates for \(sector): \(error)")
                     completion([])
                     return
                 }
                 let dates = snapshot?.documents.map { $0.documentID } ?? []
-                print("\(sector) 섹터의 날짜 리스트: \(dates)")
                 completion(dates)
             }
     }
@@ -59,7 +56,6 @@ class FirestoreService {
                    let positive = countsData["positive"] as? Int,
                    let negative = countsData["negative"] as? Int,
                    let nutural = countsData["nutural"] as? Int {
-                    print("\(sector) - \(date): counts: \(countsData))")
                     
                     let counts = Counts(positive: positive, negative: negative, nutural: nutural)
                     

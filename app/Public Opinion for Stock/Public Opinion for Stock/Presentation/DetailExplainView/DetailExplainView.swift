@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct detaildetail: View {
+struct DetailExplainView: View {
     enum Sentiment: String, CaseIterable {
         case positive = "긍정적 의견"
         case negative = "부정적 의견"
@@ -184,5 +184,5 @@ struct detaildetail: View {
 }
 
 #Preview {
-    detaildetail()
+    DetailExplainView()
 }
