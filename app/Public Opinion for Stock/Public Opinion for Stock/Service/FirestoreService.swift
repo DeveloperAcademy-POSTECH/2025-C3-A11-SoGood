@@ -9,7 +9,7 @@ class FirestoreService {
     
     // 모든 섹터 이름 가져오기
     func fetchAllSectors(completion: @escaping ([String]) -> Void) {
-        db.collection("try_sector_detail_page").getDocuments { snapshot, error in
+        db.collection("sector_detail").getDocuments { snapshot, error in
             if let error = error {
                 print("Error getting sectors: \(error)")
                 completion([])
@@ -22,7 +22,7 @@ class FirestoreService {
     
     // 특정 섹터에서 날짜 목록 가져오기
     func fetchDates(for sector: String, completion: @escaping ([String]) -> Void) {
-        db.collection("try_sector_detail_page")
+        db.collection("sector_detail")
             .document(sector)
             .collection("dates")
             .getDocuments { snapshot, error in
@@ -38,7 +38,7 @@ class FirestoreService {
     
     // 섹터 - 날짜 조합에서 데이터 가져오기
     func fetchDateInfo(for sector: String, date: String, completion: @escaping (DateInfo?) -> Void) {
-        db.collection("try_sector_detail_page")
+        db.collection("sector_detail")
             .document(sector)
             .collection("dates")
             .document(date)
@@ -50,22 +50,21 @@ class FirestoreService {
                     return
                 }
                 
-                
                 // counts 데이터 파싱
                 if let countsData = data["counts"] as? [String: Any],
                    let positive = countsData["positive"] as? Int,
                    let negative = countsData["negative"] as? Int,
-                   let nutural = countsData["nutural"] as? Int {
+                   let neutral = countsData["neutral"] as? Int {
                     
-                    let counts = Counts(positive: positive, negative: negative, nutural: nutural)
+                    let counts = Counts(positive: positive, negative: negative, neutral: neutral)
                     
                     // summary 데이터 파싱
                     if let summaryData = data["summary"] as? [String: [String: String]] {
                         
                         // 각 감정별 상세 정보 파싱
-                        if let positiveData = summaryData["긍정"],
-                           let neutralData = summaryData["중립"],
-                           let negativeData = summaryData["부정"] {
+                        if let positiveData = summaryData["positive"],
+                           let neutralData = summaryData["neutral"],
+                           let negativeData = summaryData["negative"] {
                             
                             let summary = Summary(
                                 긍정: SentimentDetail(
@@ -87,7 +86,6 @@ class FirestoreService {
                                 counts: counts,
                                 summary: summary
                             )
-                            
                             completion(dateInfo)
                             return
                         }
