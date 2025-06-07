@@ -62,7 +62,7 @@ struct DateInfo: Codable, Identifiable {
 struct Counts: Codable {
     let positive: Int
     let negative: Int
-    let nutural: Int
+    let neutral: Int
 }
 
 // MARK: - 감정별 요약

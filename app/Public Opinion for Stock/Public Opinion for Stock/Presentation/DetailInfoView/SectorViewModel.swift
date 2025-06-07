@@ -96,7 +96,7 @@ class SectorViewModel: ObservableObject {
         }
         
         let counts = dateInfo.counts
-        let total = counts.positive + counts.nutural + counts.negative
+        let total = counts.positive + counts.neutral + counts.negative
         
         guard total > 0 else {
             sentimentRatios = [:]
@@ -105,7 +105,7 @@ class SectorViewModel: ObservableObject {
         
         sentimentRatios = [
             "긍정": Double(counts.positive) / Double(total) * 100.0,
-            "중립": Double(counts.nutural) / Double(total) * 100.0,
+            "중립": Double(counts.neutral) / Double(total) * 100.0,
             "부정": Double(counts.negative) / Double(total) * 100.0
         ]
     }

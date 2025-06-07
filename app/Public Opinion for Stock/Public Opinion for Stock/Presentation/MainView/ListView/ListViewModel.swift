@@ -19,7 +19,7 @@ final class ListViewModel: ObservableObject {
     //종목 점수 계산
     func fetchSectorScores() {
         let db = Firestore.firestore()
-        db.collection("try_sector_score").document("datas").getDocument { (document, error) in
+        db.collection("sector_score").document("datas").getDocument { (document, error) in
             var tempItems: [RowItem] = []
             if let document = document, document.exists {
                 let data = document.data() ?? [:]
