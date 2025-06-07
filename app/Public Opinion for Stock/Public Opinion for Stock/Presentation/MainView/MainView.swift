@@ -11,6 +11,7 @@ struct MainView: View {
                     TreeMapView(favoriteViewModel: favoriteViewModel)
                     ListView()
                 }
+                .padding(16)
             }
         }
     }

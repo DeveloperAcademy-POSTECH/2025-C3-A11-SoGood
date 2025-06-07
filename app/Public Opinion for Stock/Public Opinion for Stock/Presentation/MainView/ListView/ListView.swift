@@ -38,7 +38,6 @@ struct ListView: View {
                     .foregroundColor(.lableSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading)
             
             //리스트 코드 (RowView를 불러와서 나열)
             LazyVStack {

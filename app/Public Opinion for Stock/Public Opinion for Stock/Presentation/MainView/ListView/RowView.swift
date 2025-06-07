@@ -35,10 +35,11 @@ struct RowView: View {
         HStack {
             Text("\(index + 1)")
                 .font(.headline1)
-                .frame(width: 24)
+                .frame(width: 24, alignment: .center)
                 .foregroundColor(.lableSecondary)
             Image(systemName: "cpu")
                 .foregroundColor(.blue)
+            
             Text(item.name)
                 .font(.headline1)
                 .frame(width: 120, alignment: .leading)
