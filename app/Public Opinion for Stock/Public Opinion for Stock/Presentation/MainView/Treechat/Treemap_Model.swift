@@ -27,13 +27,13 @@ enum SentimentType {
             )
         case .negative:
             return ColorTheme(
-                background: Color(hex: "#FFC1BF"),
-                text: Color(red: 0.10, green: 0, blue: 1)
+                background: Color(hex: "#BFCAFF"),
+                text: Color(hex: "#1900FF")
             )
         case .neutral:
             return ColorTheme(
-                background: Color(hex: "#DDDDDD"),
-                text: Color(red: 0.33, green: 0.33, blue: 0.33)
+                background: Color(hex: "#FFC1BF"),
+                text: Color(hex: "#555555")
             )
         }
     }
