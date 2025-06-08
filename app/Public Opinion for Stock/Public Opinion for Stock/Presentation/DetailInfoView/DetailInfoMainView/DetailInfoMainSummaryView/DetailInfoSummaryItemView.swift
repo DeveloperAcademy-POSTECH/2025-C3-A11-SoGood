@@ -1,63 +1,50 @@
 import SwiftUI
 
 struct DetailInfoSummaryItemView: View {
-    @ObservedObject var viewModel: SectorViewModel
+    @Binding var sectorDetail: [String: Any]?
+    let sentimentType: String
     @State private var isExpanded: Bool = false
     
-    @Binding var selectedSector: String
-    let selectedDate: String
-    let sentimentType: String
-    
-    var sentimentColor: Color {
+    // 감정 타입에 따른 색상
+    private var sentimentColor: Color {
         switch sentimentType {
-        case "긍정":
+        case "positive":
             return .redPrimary
-        case "부정":
+        case "negative":
             return .bluePrimary
         default:
             return .lableSecondary
-            
         }
     }
     
-    var sentimentTitle: String {
+    // 감정 타입에 따른 제목
+    private var sentimentTitle: String {
         switch sentimentType {
-        case "긍정":
+        case "positive":
             return "긍정적 반응"
-        case "부정":
+        case "negative":
             return "부정적 반응"
         default:
             return "중립적 반응"
         }
     }
     
-    var currentSectorData: SectorData? {
-        if let selectedSector = viewModel.selectedSector {
-            return viewModel.sectors[selectedSector]
+    // 헤드라인과 요약 데이터를 위한 계산 프로퍼티
+    private var summaryData: (headline: String, summary: String) {
+        if let summaryDict = sectorDetail?["summary"] as? [String: [String: Any]],
+           let sentimentData = summaryDict[sentimentType] as? [String: String] {
+            return (
+                headline: sentimentData["headline"] ?? "정보 없음",
+                summary: sentimentData["summary"] ?? "해당 유형의 의견을 확인할 수 있는 게시글이 부족합니다."
+            )
         }
-        return nil
+        return (
+            headline: "정보 없음",
+            summary: "해당 유형의 의견을 확인할 수 있는 게시글이 부족합니다."
+        )
     }
-
-    
-    var summaryText: (headline: String, summary: String)? {
-        if let sectorData = viewModel.sectors[selectedSector],
-           let dateInfo = sectorData.dates[selectedDate] {
-            switch sentimentType {
-            case "긍정":
-                return (dateInfo.summary.positive.headline, dateInfo.summary.positive.summary)
-            case "부정":
-                return (dateInfo.summary.negative.headline, dateInfo.summary.negative.summary)
-            default:
-                return (dateInfo.summary.neutral.headline, dateInfo.summary.neutral.summary)
-            }
-        }
-        return nil
-    }
-    
-    
     
     var body: some View {
-        
         VStack(alignment: .leading) {
             HStack {
                 Text(sentimentTitle)
@@ -72,28 +59,23 @@ struct DetailInfoSummaryItemView: View {
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .foregroundStyle(.lableSecondary)
                 }
-                
             }
             
-            if let summary = summaryText {
-                Text(summary.headline)
-                    .font(isExpanded ? .body3 : .body2)
+            // 헤드라인 표시
+            Text(summaryData.headline)
+                .font(isExpanded ? .body3 : .body2)
+                .foregroundStyle(.lablePrimary)
+                .lineLimit(nil)
+            
+            // 확장된 경우 요약 표시
+            if isExpanded {
+                Text(summaryData.summary)
+                    .font(.body1)
                     .foregroundStyle(.lablePrimary)
                     .lineLimit(nil)
-                
-                
-                if isExpanded {
-                    Text(summary.summary)
-                        .font(.body1)
-                        .foregroundStyle(.lablePrimary)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            
         }
         .padding(.vertical)
     }
-    
 }

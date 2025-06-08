@@ -4,7 +4,6 @@ struct DetailInfoView: View {
     var sectors: [MainRowItem]
     @State private var selectedSector: String
     @StateObject private var detailInfoViewModel: DetailInfoViewModel
-    @StateObject private var viewModel = SectorViewModel()
     @StateObject private var sentimentChartViewModel: SentimentViewModel
     var date: String
 
@@ -27,9 +26,10 @@ struct DetailInfoView: View {
                     selectedSector: $selectedSector
                 )
                 DetailInfoMainView(
-                    viewModel: viewModel,
-                    detailInfoViewModel: detailInfoViewModel,
+                    sectorDetail: $detailInfoViewModel.sectorDetail,
+                    sectorPercent: $detailInfoViewModel.sectorPercent,
                     selectedSector: $selectedSector,
+                    sectorDetailDetail: $detailInfoViewModel.sectorDetailDetail,
                     date: date
                 )
                 SentimentFrameView()

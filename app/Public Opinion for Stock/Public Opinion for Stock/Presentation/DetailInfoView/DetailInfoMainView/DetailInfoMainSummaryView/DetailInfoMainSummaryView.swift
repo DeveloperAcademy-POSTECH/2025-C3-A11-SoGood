@@ -2,25 +2,34 @@ import SwiftUI
 
 
 struct DetailInfoMainSummaryView: View {
-    @ObservedObject var viewModel: SectorViewModel
-    @Binding var selectedSector: String
-    let selectedDate: String
+    @Binding var sectorDetail: [String: Any]?
+    @Binding var sectorDetailDetail: [String: Any]?
     
     var body: some View {
         
         VStack(spacing: 8) {
             
-            DetailInfoSummaryItemView(viewModel: viewModel, selectedSector: $selectedSector, selectedDate: selectedDate, sentimentType: "긍정")
-            DetailInfoSummaryItemView(viewModel: viewModel, selectedSector: $selectedSector, selectedDate: selectedDate, sentimentType: "부정")
-            DetailInfoSummaryItemView(viewModel: viewModel, selectedSector: $selectedSector, selectedDate: selectedDate, sentimentType: "중립")
+            DetailInfoSummaryItemView(
+                sectorDetail: $sectorDetail,
+                sentimentType: "positive"
+            )
             
+            DetailInfoSummaryItemView(
+                sectorDetail: $sectorDetail,
+                sentimentType: "negative"
+            )
+            
+            DetailInfoSummaryItemView(
+                sectorDetail: $sectorDetail,
+                sentimentType: "neutral"
+            )
+
             Divider()
                 .padding()
             
-            // FIXME: 네비게이션 연결 및 넘어가는 데이터 설정
             NavigationLink(destination: Text("detailDetailView")) {
                 HStack {
-                    Text("316개의 의견보기")
+                    Text("\(sectorDetailDetail?.count ?? 0)개의 의견보기")
                         .font(.subheadline1)
                     
                     Image(systemName: "chevron.right")
@@ -28,8 +37,6 @@ struct DetailInfoMainSummaryView: View {
                         .fontWeight(.medium)
                 }
                 .foregroundStyle(.lableSecondary)
-                
-                
             }
             .padding(.horizontal, -16)
             .padding(.bottom)

@@ -1,15 +1,18 @@
 import SwiftUI
 
 struct DetailInfoMainView: View {
-    @ObservedObject var viewModel: SectorViewModel
-    @ObservedObject var detailInfoViewModel: DetailInfoViewModel
+    @Binding var sectorDetail: [String: Any]?
+    @Binding var sectorPercent: [String: Double]?
     @Binding var selectedSector: String
+    @Binding var sectorDetailDetail: [String: Any]?
     let date: String
     
-    init(viewModel: SectorViewModel, detailInfoViewModel: DetailInfoViewModel, selectedSector: Binding<String>, date: String) {
-        self.viewModel = viewModel
-        self.detailInfoViewModel = detailInfoViewModel
+    init(sectorDetail: Binding<[String: Any]?>, sectorPercent: Binding<[String: Double]?>, 
+    selectedSector: Binding<String>, sectorDetailDetail: Binding<[String: Any]?>, date: String) {
+        self._sectorDetail = sectorDetail
+        self._sectorPercent = sectorPercent
         self._selectedSector = selectedSector
+        self._sectorDetailDetail = sectorDetailDetail
         self.date = date
     }
     
@@ -17,12 +20,11 @@ struct DetailInfoMainView: View {
         VStack(alignment: .leading) {
             DetailInfoMainTopView(currentSectorName: selectedSector)
             
-            DetailInfoMainChartView(viewModel: viewModel, detailInfoViewModel: detailInfoViewModel, selectedSector: $selectedSector, date: date)
+            DetailInfoMainChartView(sectorPercent: $sectorPercent, selectedSector: $selectedSector, date: date)
             
             DetailInfoMainSummaryView(
-                viewModel: viewModel,
-                selectedSector: $selectedSector,
-                selectedDate: date
+                sectorDetail: $sectorDetail,
+                sectorDetailDetail: $sectorDetailDetail
             )
         }
         .padding(.horizontal, 16)
