@@ -56,4 +56,37 @@ class FirestoreService {
               completion(detailDate)
           }
     }
+
+    // 특정 섹터의 모든 날짜 데이터를 가져오는 메서드 추가
+    func fetchSectorAllDatesData(sectorName: String, completion: @escaping ([SentimentRecord]?) -> Void) {
+        db.collection("sector_detail")
+          .document(sectorName)
+          .collection("dates")
+          .getDocuments { snapshot, error in
+              guard let documents = snapshot?.documents else {
+                  completion(nil)
+                  return
+              }
+              
+              let records = documents.compactMap { document -> SentimentRecord? in
+                  let data = document.data()
+                  guard let date = document.documentID as String?,
+                        let counts = data["counts"] as? [String: Any],
+                        let positive = counts["positive"] as? Int,
+                        let negative = counts["negative"] as? Int,
+                        let neutral = counts["neutral"] as? Int else {
+                      return nil
+                  }
+                  return SentimentRecord(
+                      date: date,
+                      category: sectorName,
+                      positive: positive,
+                      negative: negative,
+                      neutral: neutral
+                  )
+              }.sorted { $0.date < $1.date }
+              
+              completion(records)
+          }
+    }
 }

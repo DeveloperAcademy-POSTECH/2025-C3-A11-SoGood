@@ -10,3 +10,8 @@ struct CategoryItem: Identifiable, Codable {
 struct FavoriteState: Codable {
     var categories: [String: Bool]
 }
+
+struct ErrorWrapper: Identifiable {
+    let id = UUID()
+    let message: String
+}
