@@ -2,10 +2,16 @@ import SwiftUI
 import Charts
 
 struct DetailInfoMainChartView: View {  // public 제거
+    @Binding var selectedSector: String
     @ObservedObject var viewModel: SectorViewModel
+    @ObservedObject var detailInfoViewModel: DetailInfoViewModel
+    let date: String
 
-    init(viewModel: SectorViewModel) {
+    init(viewModel: SectorViewModel, detailInfoViewModel: DetailInfoViewModel, selectedSector: Binding<String>, date: String) {
         self.viewModel = viewModel
+        self.detailInfoViewModel = detailInfoViewModel
+        self._selectedSector = selectedSector
+        self.date = date
     }
     
     private var sentimentOrder = ["긍정", "중립", "부정"]
@@ -70,6 +76,9 @@ struct DetailInfoMainChartView: View {  // public 제거
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .padding(.bottom, 37)
+        }
+        .onChange(of: selectedSector) { oldValue, newSector in
+            viewModel.calculateSentimentRatios(for: newSector, date: date)
         }
     }
 }

@@ -88,38 +88,31 @@ class SectorViewModel: ObservableObject {
         }
     }
     
-    func calculateSentimentRatios(for sector: String, date: String) {
+    func calculateSentimentRatios(for sector: String, date: String) -> [String: Double] {
         guard let sectorData = sectors[sector],
               let dateInfo = sectorData.dates[date] else {
-            sentimentRatios = [:]
-            return
+            self.sentimentRatios = [:]
+            return [:]
         }
         
         let counts = dateInfo.counts
         let total = counts.positive + counts.neutral + counts.negative
         
         guard total > 0 else {
-            sentimentRatios = [:]
-            return
+            self.sentimentRatios = [:]
+            return [:]
         }
         
-        sentimentRatios = [
+        let calculatedRatios = [
             "긍정": Double(counts.positive) / Double(total) * 100.0,
             "중립": Double(counts.neutral) / Double(total) * 100.0,
             "부정": Double(counts.negative) / Double(total) * 100.0
         ]
+        
+        self.sentimentRatios = calculatedRatios
+        return calculatedRatios
     }
     
-    func selectSector(_ sectorName: String) {
-        self.selectedSector = sectorName
-        
-        if let sectorData = sectors[sectorName],
-           let firstDate = sectorData.dates.keys.sorted().first {
-            calculateSentimentRatios(for: sectorName, date: firstDate)
-        } else {
-            sentimentRatios = [:]
-        }
-    }
     
     func injectSectorData(sector: String, data: SectorData) {
         self.sectors[sector] = data

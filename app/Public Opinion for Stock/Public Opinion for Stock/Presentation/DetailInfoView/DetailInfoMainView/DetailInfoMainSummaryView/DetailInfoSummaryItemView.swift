@@ -44,11 +44,11 @@ struct DetailInfoSummaryItemView: View {
            let dateInfo = sectorData.dates[selectedDate] {
             switch sentimentType {
             case "긍정":
-                return (dateInfo.summary.긍정.headline, dateInfo.summary.긍정.summary)
+                return (dateInfo.summary.positive.headline, dateInfo.summary.positive.summary)
             case "부정":
-                return (dateInfo.summary.부정.headline, dateInfo.summary.부정.summary)
+                return (dateInfo.summary.negative.headline, dateInfo.summary.negative.summary)
             default:
-                return (dateInfo.summary.중립.headline, dateInfo.summary.중립.summary)
+                return (dateInfo.summary.neutral.headline, dateInfo.summary.neutral.summary)
             }
         }
         return nil

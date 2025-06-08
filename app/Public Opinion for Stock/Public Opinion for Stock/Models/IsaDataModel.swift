@@ -58,26 +58,6 @@ struct DateInfo: Codable, Identifiable {
     }
 }
 
-// MARK: - 감정 카운트
-struct Counts: Codable {
-    let positive: Int
-    let negative: Int
-    let neutral: Int
-}
-
-// MARK: - 감정별 요약
-struct Summary: Codable {
-    let 긍정: SentimentDetail
-    let 중립: SentimentDetail
-    let 부정: SentimentDetail
-}
-
-// MARK: - 감정 상세 정보
-struct SentimentDetail: Codable {
-    let headline: String
-    let summary: String
-}
-
 // MARK: - CodingUserInfoKey 확장
 extension CodingUserInfoKey {
     static let sectorName = CodingUserInfoKey(rawValue: "sectorName")!
