@@ -51,25 +51,10 @@ struct SentimentFrameView: View {
                                 .foregroundColor(.gray)
                         }
                     }
-                    
-                    Spacer()
-                    
-                    Picker("섹터 선택", selection: $viewModel.selectedSector) {
-                        ForEach(viewModel.sectors, id: \.self) { sector in
-                            Text(sector).tag(sector)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .frame(width: 120)
                 }
             }
             Spacer()
         }
         .padding()
     }
-}
-
-#Preview {
-    SentimentFrameView()
-        .environmentObject(SentimentViewModel(category: "IT"))
 }

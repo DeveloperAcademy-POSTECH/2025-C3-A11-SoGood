@@ -2,8 +2,10 @@ import SwiftUI
 
 
 struct DetailInfoMainSummaryView: View {
+    @Binding var selectedSector: String
     @Binding var sectorDetail: [String: Any]?
     @Binding var sectorDetailDetail: [String: Any]?
+    let date: String
     
     var body: some View {
         
@@ -27,9 +29,9 @@ struct DetailInfoMainSummaryView: View {
             Divider()
                 .padding()
             
-            NavigationLink(destination: Text("detailDetailView")) {
+            NavigationLink(destination: DetailExplainView(sectorDetailDetail: sectorDetailDetail, date: date, selectedSector: selectedSector)) {
                 HStack {
-                    Text("\(sectorDetailDetail?.count ?? 0)개의 의견보기")
+                    Text("\(sectorDetailDetail?.count ?? 0)개 채널 의견보기")
                         .font(.subheadline1)
                     
                     Image(systemName: "chevron.right")

@@ -23,8 +23,10 @@ struct DetailInfoMainView: View {
             DetailInfoMainChartView(sectorPercent: $sectorPercent, selectedSector: $selectedSector, date: date)
             
             DetailInfoMainSummaryView(
+                selectedSector: $selectedSector,
                 sectorDetail: $sectorDetail,
-                sectorDetailDetail: $sectorDetailDetail
+                sectorDetailDetail: $sectorDetailDetail,
+                date: date
             )
         }
         .padding(.horizontal, 16)

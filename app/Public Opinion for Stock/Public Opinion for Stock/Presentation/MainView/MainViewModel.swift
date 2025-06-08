@@ -26,10 +26,12 @@ class MainViewModel: ObservableObject {
         var emotionScore = 0
         
         if total > 0 {
-            if positive >= negative {
+            if positive > negative {
                 emotionScore = Int(Double(positive) / Double(total) * 100)
-            } else {
+            } else if positive < negative {
                 emotionScore = Int(Double(negative) / Double(total) * 100) * -1
+            }else{
+                emotionScore = 0
             }
         }
         

@@ -13,7 +13,7 @@ struct DetailInfoView: View {
         self.date = date
         self._detailInfoViewModel = StateObject(wrappedValue: DetailInfoViewModel(selectedSector: selectedSector, date: date))
         self._sentimentChartViewModel = StateObject(
-            wrappedValue: SentimentViewModel(category: selectedSector)
+            wrappedValue: SentimentViewModel(selectedSector: selectedSector)
         )
     }
 
@@ -38,6 +38,7 @@ struct DetailInfoView: View {
         }
         .onChange(of: selectedSector) { _, newSector in
             detailInfoViewModel.updateSector(newSector)
+            sentimentChartViewModel.updateCategory(newSector)
         }
     }
 }

@@ -5,42 +5,18 @@ class SentimentViewModel: ObservableObject {
     @Published var records: [SentimentRecord] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var sectors: [String] = []
-    @Published var selectedSector: String {
-        didSet {
-            fetchSentimentData()
-        }
-    }
     
     private let db = Firestore.firestore()
+    private var selectedSector: String
     
-    init(category: String) {
-        self.selectedSector = category
-        fetchSectors()
+    init(selectedSector: String) {
+        self.selectedSector = selectedSector
         fetchSentimentData()
     }
     
-    func fetchSectors() {
-        isLoading = true
-        db.collection("sector_detail").getDocuments { [weak self] snapshot, error in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                if let error = error {
-                    self?.errorMessage = "섹터 목록을 가져오는데 실패했습니다: \(error.localizedDescription)"
-                    return
-                }
-                let ids = snapshot?.documents.compactMap { $0.documentID } ?? []
-                self?.sectors = ids
-                if let first = ids.first, self?.selectedSector != first {
-                    self?.selectedSector = first
-                } else {
-                    self?.fetchSentimentData()
-                }
-                if ids.isEmpty {
-                    self?.errorMessage = "섹터 목록이 비어있습니다."
-                }
-            }
-        }
+    func updateCategory(_ newCategory: String) {
+        self.selectedSector = newCategory
+        fetchSentimentData()
     }
     
     func fetchSentimentData() {

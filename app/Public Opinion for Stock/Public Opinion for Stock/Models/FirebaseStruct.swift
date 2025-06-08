@@ -64,6 +64,14 @@ extension SectorDetailDetailDate {
 struct Channel {
     let posts: [Post]
     let score: Int
+
+    var sentiment: Sentiment {
+        switch score {
+        case 60...: return .positive
+        case ..<40: return .negative
+        default: return .neutral
+        }
+    }
 }
 extension Channel {
     static func parse(from data: [String: Any]) -> Channel? {
