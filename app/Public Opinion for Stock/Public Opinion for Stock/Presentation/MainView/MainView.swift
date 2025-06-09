@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var favoriteViewModel = FavoriteViewModel()
+    @StateObject private var mainViewModel = MainViewModel()
     
     var body: some View {
         NavigationStack {
@@ -9,8 +10,9 @@ struct MainView: View {
                 VStack {
                     Spacer()
                     TreeMapView(favoriteViewModel: favoriteViewModel)
-                    ListView()
+                    ListView(mainViewModel: mainViewModel)
                 }
+                .padding(16)
             }
         }
     }
