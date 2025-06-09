@@ -61,7 +61,7 @@ class MainViewModel: ObservableObject {
                     
                     // 정렬된 배열 저장
                     self.sortedSectors = calculatedScores.map { sector, score in
-                        MainRowItem(sector: sector, score: score)
+                        MainRowItem(sector: sector, score: score, iconName: sector)
                     }
                     .sorted { $0.score > $1.score }
                 }

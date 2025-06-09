@@ -1,9 +1,16 @@
+//
+//  RowItem_test.swift
+//  Public Opinion for Stock
+//
+//  Created by Jacob on 6/3/25.
+//
+
 import Foundation
 
-struct MainRowItem: Identifiable {
-    var id: String { sector }  // sector를 id로 사용
-    let sector: String
-    let score: Int
+struct RowItem: Identifiable {
+    let id = UUID()
+    let name: String
+    let value: Int
     let iconName: String //한글을 -> 영어로 바꿔야할것
     
     var koreanToEnglish: String {
