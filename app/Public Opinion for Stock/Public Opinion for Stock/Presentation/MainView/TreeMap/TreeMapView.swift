@@ -1,25 +1,5 @@
 import SwiftUI
 
-struct BlockView: View {
-    let block: TreemapBlock
-    
-    var body: some View {
-        VStack(spacing: 3) {
-            Text(block.label)
-                .font(.headline1)
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(.primary)
-            
-            Text(block.percent)
-                .font(.body2)
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(block.sentiment.percentColor)
-        }
-        .frame(width: block.rect.width, height: 80)
-        .background(block.color)
-        .cornerRadius(5)
-    }
-}
 
 struct TreeMapView: View {
     @StateObject private var viewModel: TreemapViewModel
@@ -60,7 +40,7 @@ struct TreeMapView: View {
                 } else {
                     ZStack(alignment: .topLeading) {
                         ForEach(viewModel.blocks) { block in
-                            BlockView(block: block)
+                            TreeMapViewBlockModel(treeBlock: block)
                                 .position(x: block.rect.midX, y: block.rect.midY)
                         }
                     }
