@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TreemapBlock: Identifiable {
+struct TreeMapBlock: Identifiable {
     let id = UUID()
     let value: Double
     let rect: CGRect
@@ -59,7 +59,7 @@ struct StockData {
     var percentString: String {
         if totalValue == 0 { return "0%" }
         let isPositive = positive > negative
-        return String(format: "%@%.1f%%", isPositive ? "+" : "-", percentageValue)
+        return String(format: "%@%.f%", isPositive ? "+" : "-", percentageValue)
     }
     
     var sentiment: SentimentType {

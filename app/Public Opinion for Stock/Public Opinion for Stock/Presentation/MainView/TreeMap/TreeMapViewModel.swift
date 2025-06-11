@@ -1,7 +1,7 @@
 import SwiftUI
 //
 class TreemapViewModel: ObservableObject {
-    @Published var blocks: [TreemapBlock] = []
+    @Published var blocks: [TreeMapBlock] = []
     @Published var contentHeight: CGFloat = 144  // 기본 높이
     private let size: CGSize
     private let rowHeight: CGFloat = 80
@@ -33,7 +33,7 @@ class TreemapViewModel: ObservableObject {
         let rects = calculateTreemapLayout(data: sortedData, frame: frame)
         
         self.blocks = zip(sortedData, rects).map { item, rect in
-            TreemapBlock(
+            TreeMapBlock(
                 value: item.totalValue,
                 rect: rect,
                 label: item.label,
@@ -90,7 +90,7 @@ class TreemapViewModel: ObservableObject {
             remainingRect.origin.y += rowRects[0].height + 3
             remainingRect.size.height -= rowRects[0].height + 3
         }
-        
+        print("rects: \(rects)")
         return rects
     }
     
@@ -123,6 +123,7 @@ class TreemapViewModel: ObservableObject {
                     break
                 }
             }
+            print("row: \(row)")
             
             return row.isEmpty ? [values[0]] : row
         }
@@ -148,7 +149,6 @@ class TreemapViewModel: ObservableObject {
             rects.append(rect)
             xOffset += width + spacing
         }
-        
         return rects
     }
 }
