@@ -10,8 +10,8 @@ struct FavoriteCategoryRow: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 HStack(spacing: 16) {
-                    Circle()
-                        .fill(Color(hex: "#E9EDFC"))
+                    Image(item.koreanToEnglish)  // CategoryItem의 id가 섹터 이름이므로 이를 이미지 이름으로 사용
+                        .resizable()
                         .frame(width: 44, height: 44)
                     
                     Text(item.name)
@@ -27,7 +27,6 @@ struct FavoriteCategoryRow: View {
                         .foregroundColor(isFavorite ? .red : .green)  // .redPrimary와 .accent 대신 .red와 .green 사용
                 }
             }
-            .padding(.horizontal, 16)
  
             Divider()
                 .background(Color(.tertiaryLabel))

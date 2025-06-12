@@ -27,7 +27,6 @@ struct TreeMapView: View {
                         .foregroundColor(Color(.bluePrimary))
                 }
             }
-            .padding(.horizontal)
             
             Group {
                 if favoriteViewModel.favoriteCategories.isEmpty {
@@ -53,7 +52,6 @@ struct TreeMapView: View {
                     }
                 }
             }
-            .padding(16)
         }
     }
 }

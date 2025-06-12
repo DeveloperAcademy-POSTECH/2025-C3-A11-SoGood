@@ -90,7 +90,6 @@ class TreemapViewModel: ObservableObject {
             remainingRect.origin.y += rowRects[0].height + 3
             remainingRect.size.height -= rowRects[0].height + 3
         }
-        print("rects: \(rects)")
         return rects
     }
     
@@ -123,7 +122,6 @@ class TreemapViewModel: ObservableObject {
                     break
                 }
             }
-            print("row: \(row)")
             
             return row.isEmpty ? [values[0]] : row
         }

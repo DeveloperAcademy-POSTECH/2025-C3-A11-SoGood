@@ -7,12 +7,13 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack {
-                    Spacer()
+                VStack (spacing:16) {
                     TreeMapView(favoriteViewModel: favoriteViewModel)
+                    Divider()
                     ListView(mainViewModel: mainViewModel)
                 }
-                .padding(16)
+                .frame(width: 361, alignment: .leading)
+                .padding(.horizontal,16)
             }
         }
     }

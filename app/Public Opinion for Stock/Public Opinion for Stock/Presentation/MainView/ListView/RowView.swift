@@ -50,6 +50,5 @@ struct RowView: View {
                 .font(.headline2)
                 .foregroundColor(valueColor)
         }
-        .padding(.vertical, 4)
     }
 }

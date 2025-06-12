@@ -8,7 +8,7 @@ struct FavoriteView: View {
         ZStack {
             Color.white.edgesIgnoringSafeArea(.all)
 
-            VStack(spacing: 24) {
+            VStack(spacing: 12) {
                 // 네비게이션 바
                 HStack(spacing: 99) {
                     Button("취소") {
@@ -34,22 +34,9 @@ struct FavoriteView: View {
                     ProgressView()
                         .scaleEffect(1.5)
                     Spacer()
-                } else if let errorMessage = viewModel.errorMessage {
-                    Spacer()
-                    VStack(spacing: 16) {
-                        Text("오류가 발생했습니다")
-                            .font(.headline2)
-                            .foregroundColor(Color(.lablePrimary))
-                        Text(errorMessage)
-                            .font(.body2)
-                            .foregroundColor(Color(.gray))
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding()
-                    Spacer()
                 } else {
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 40) {
+                        VStack(alignment: .leading, spacing: 32) {
                             // 즐겨찾기 섹션
                             if !viewModel.favoriteCategories.isEmpty {
                                 VStack(alignment: .leading, spacing: 16) {
