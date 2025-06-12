@@ -8,8 +8,9 @@ class MainViewModel: ObservableObject {
     private let firestoreService = FirestoreService()
     
     init() {
-        let yesterdayDate = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
-        self.yesterday = Self.formattedDate(yesterdayDate)
+//        let yesterdayDate = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
+        // self.yesterday = Self.formattedDate(yesterdayDate)
+        self.yesterday = "2025-06-11"
         fetchSectorScoreData()
     }
 
