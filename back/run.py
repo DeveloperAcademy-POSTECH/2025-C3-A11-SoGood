@@ -9,10 +9,10 @@ async def job(n):
 def run_job(n):
     asyncio.run(job(n))
 
-run_job(n = 7)
+run_job(n = 2)
 
 # 매일 아침 6시에 실행하도록 스케줄 설정
-schedule.every().day.at("06:00").do(run_job, n = 1)
+schedule.every().day.at("06:00").do(run_job, n = 2)
 
 def main():
     while True:
@@ -22,4 +22,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main() 

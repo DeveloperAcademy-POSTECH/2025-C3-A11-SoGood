@@ -1,33 +1,12 @@
 import SwiftUI
 
-struct BlockView: View {
-    let block: TreemapBlock
-    
-    var body: some View {
-        VStack(spacing: 3) {
-            Text(block.label)
-                .font(.headline1)
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(.primary)
-            
-            Text(block.percent)
-                .font(.body2)
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(block.sentiment.percentColor)
-        }
-        .frame(width: block.rect.width, height: 80)
-        .background(block.color)
-        .cornerRadius(5)
-    }
-}
 
 struct TreeMapView: View {
     @StateObject private var viewModel: TreemapViewModel
     @ObservedObject var favoriteViewModel: FavoriteViewModel
-    @State private var showingFavoriteView = false
     private let size: CGSize
     
-    init(favoriteViewModel: FavoriteViewModel, size: CGSize = CGSize(width: 361, height: 252)) {
+    init(favoriteViewModel: FavoriteViewModel, size: CGSize = CGSize(width: 361, height: 144)) {
         self.size = size
         self._viewModel = StateObject(wrappedValue: TreemapViewModel(size: size))
         self.favoriteViewModel = favoriteViewModel
@@ -48,7 +27,6 @@ struct TreeMapView: View {
                         .foregroundColor(Color(.bluePrimary))
                 }
             }
-            .padding(.horizontal)
             
             Group {
                 if favoriteViewModel.favoriteCategories.isEmpty {
@@ -57,29 +35,27 @@ struct TreeMapView: View {
                             .font(.headline)
                             .foregroundColor(.gray)
                     }
-                    .frame(width: size.width, height: size.height)
+                    .frame(width: size.width, height: 144)
                 } else {
                     ZStack(alignment: .topLeading) {
                         ForEach(viewModel.blocks) { block in
-                            BlockView(block: block)
+                            TreeMapViewBlockModel(treeBlock: block)
                                 .position(x: block.rect.midX, y: block.rect.midY)
                         }
                     }
-                    .frame(width: size.width, height: size.height)
+                    .frame(width: size.width, height: viewModel.contentHeight)
                     .onAppear {
                         viewModel.updateData(with: favoriteViewModel)
                     }
-                    .onChange(of: favoriteViewModel.favoriteCategories.count) { oldValue, newValue in
+                    .onChange(of: favoriteViewModel.favoriteCategories.count) { _, _ in
                         viewModel.updateData(with: favoriteViewModel)
                     }
                 }
             }
-            .padding(16)
         }
-        
     }
 }
 
-//#Preview {
-//    TreemapView(favoriteViewModel: FavoriteViewModel())
-//}
+#Preview {
+    TreeMapView(favoriteViewModel: FavoriteViewModel())
+}

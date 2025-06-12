@@ -1,21 +1,39 @@
 import SwiftUI
 //
 class TreemapViewModel: ObservableObject {
-    @Published var blocks: [TreemapBlock] = []
+    @Published var blocks: [TreeMapBlock] = []
+    @Published var contentHeight: CGFloat = 144  // 기본 높이
     private let size: CGSize
+    private let rowHeight: CGFloat = 80
+    private let rowSpacing: CGFloat = 3
     
-    init(size: CGSize) {  // 기본값 제거
+    init(size: CGSize) {
         self.size = size
+    }
+    
+    private func calculateContentHeight(for data: [StockData]) -> CGFloat {
+        let sortedData = sortData(data)
+        var remainingValues = sortedData
+        var totalHeight: CGFloat = 0
+        
+        while !remainingValues.isEmpty {
+            let row = selectRow(values: remainingValues, totalPercentage: remainingValues.reduce(0.0) { $0 + abs($1.percentageValue) }, frameWidth: size.width)
+            totalHeight += rowHeight + rowSpacing
+            remainingValues.removeFirst(row.count)
+        }
+        
+        return max(144, totalHeight - rowSpacing)  // 마지막 spacing 제거하고 최소 높이 144 보장
     }
     
     func updateData(with favoriteViewModel: FavoriteViewModel) {
         let data = StockData.getDataFromFavorites(favoriteViewModel)
         let sortedData = sortData(data)
-        let frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        self.contentHeight = calculateContentHeight(for: data)
+        let frame = CGRect(x: 0, y: 0, width: size.width, height: contentHeight)
         let rects = calculateTreemapLayout(data: sortedData, frame: frame)
         
         self.blocks = zip(sortedData, rects).map { item, rect in
-            TreemapBlock(
+            TreeMapBlock(
                 value: item.totalValue,
                 rect: rect,
                 label: item.label,
@@ -72,7 +90,6 @@ class TreemapViewModel: ObservableObject {
             remainingRect.origin.y += rowRects[0].height + 3
             remainingRect.size.height -= rowRects[0].height + 3
         }
-        
         return rects
     }
     
@@ -109,7 +126,6 @@ class TreemapViewModel: ObservableObject {
             return row.isEmpty ? [values[0]] : row
         }
     
-    
     private func layoutRow(values: [StockData], frame: CGRect) -> [CGRect] {
         let rowValue = values.reduce(0.0) { $0 + abs($1.percentageValue) }
         let height: CGFloat = 80
@@ -131,7 +147,6 @@ class TreemapViewModel: ObservableObject {
             rects.append(rect)
             xOffset += width + spacing
         }
-        
         return rects
     }
 }
